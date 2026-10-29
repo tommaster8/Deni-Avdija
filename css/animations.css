@@ -9,7 +9,9 @@
 }
 
 /* ---------- Stinger – מעבר Replay בין שקופיות ---------- */
-.stinger { position: fixed; inset: 0; pointer-events: none; z-index: 40; overflow: hidden; }
+/* מוסתר כשאין מעבר: במסך גבוה וצר הפס המוטה בולט מעבר לנקודת ההסתרה שלו */
+.stinger { position: fixed; inset: 0; pointer-events: none; z-index: 40; overflow: hidden; visibility: hidden; }
+.stinger.run { visibility: visible; }
 .stinger-bar {
   position: absolute; top: -10%; bottom: -10%; width: 70%; right: -80%;
   background: var(--red); transform: skewX(-14deg);

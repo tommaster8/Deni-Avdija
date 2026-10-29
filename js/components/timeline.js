@@ -45,6 +45,15 @@ GN.timeline = (() => {
       t.tabIndex = i === index ? 0 : -1;
     });
     $('ctl-fill').style.width = `${(index / (TIMELINE.length - 1)) * 100}%`;
+    // במסך צר הציר נגלל אופקית: התחנה הנבחרת תמיד נגללת לאמצע
+    const rail = $('ctl-track').parentElement;
+    const stop = tabs[index];
+    if (rail.scrollWidth > rail.clientWidth) {
+      // לפי מיקום על המסך ולא לפי scrollLeft, שערכו שלילי ב־RTL
+      const r = rail.getBoundingClientRect();
+      const s = stop.getBoundingClientRect();
+      rail.scrollBy({ left: (s.left + s.width / 2) - (r.left + r.width / 2), behavior: GN.reduceMotion ? 'auto' : 'smooth' });
+    }
     $('ctl-count').textContent = `${index + 1} / ${TIMELINE.length}`;
     $('ctl-prev').disabled = index === 0;
     $('ctl-next').disabled = index === TIMELINE.length - 1;

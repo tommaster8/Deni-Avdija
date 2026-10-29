@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>screenshot helper</title>
+  <!-- עמוד עזר לצילומי מסך לתיעוד: טוען את המצגת האמיתית ומבצע בה לחיצות אמיתיות לפני הצילום.
+       שימוש: tests/screenshot.html?shot=timeline (ראו SHOTS למטה) -->
+  <style>html, body { margin: 0; height: 100%; overflow: hidden; background: #0b0e14; } iframe { border: 0; width: 100%; height: 100%; display: block; }</style>
+</head>
+<body>
+<iframe id="f" title="presentation"></iframe>
+<script>
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const SHOTS = {
+  opening:  { hash: '#1' },
+  card:     { hash: '#2', run: (D) => D.querySelector('.flip-card').click() },
+  timeline: { hash: '#3', run: (D) => D.querySelectorAll('.ctl-stop')[6].click() },
+  chart:    { hash: '#8', run: async (D, W) => { D.querySelector('[data-bar="reb"]').click(); await sleep(1500); D.querySelectorAll('.bar')[3].dispatchEvent(new W.MouseEvent('mouseenter')); } },
+  compare:  { hash: '#9', run: (D, W) => { const a = D.getElementById('cmp-a'); a.value = '2020-21'; a.dispatchEvent(new W.Event('change')); } },
+  night:    { hash: '#5', run: (D, W) => W.GN.clock.open() },
+  quiz:     { hash: '#14', run: async (D) => {
+    const picks = [1, 1, 3, 0, 0, 2, 1]; // תשובה שגויה אחת (שאלה 4) כדי להציג משוב שגוי בסיכום
+    for (const p of picks) { D.querySelectorAll('#quiz-options button')[p].click(); await sleep(50); D.getElementById('quiz-next').click(); await sleep(50); }
+  } },
+  national: { hash: '#11', run: (D) => D.querySelectorAll('.seg [data-tab]')[1].click() },
+};
+(async () => {
+  const shot = SHOTS[new URLSearchParams(location.search).get('shot') || 'opening'];
+  const f = document.getElementById('f');
+  f.src = `../index.html${shot.hash}`;
+  await new Promise((r) => (f.onload = r));
+  await sleep(2500); // אנימציות הכניסה מסתיימות
+  if (shot.run) await shot.run(f.contentDocument, f.contentWindow);
+  await sleep(3500);
+  document.title = 'ready';
+})();
+</script>
+</body>
+</html>
