@@ -1,0 +1,44 @@
+/* ============ animations.css – בסיס האנימציות ============
+   כל רכיב עם data-anim נכנס בהדרגה כשהשקופית פעילה.
+   הסדר נקבע אוטומטית ב־JS (המשתנה --i). */
+
+[data-anim] { opacity: 0; transform: translateY(24px); }
+.slide.active [data-anim] {
+  animation: rise .7s var(--ease) forwards;
+  animation-delay: calc(var(--i, 0) * 90ms + 150ms);
+}
+
+/* ---------- Stinger – מעבר Replay בין שקופיות ---------- */
+.stinger { position: fixed; inset: 0; pointer-events: none; z-index: 40; overflow: hidden; }
+.stinger-bar {
+  position: absolute; top: -10%; bottom: -10%; width: 70%; right: -80%;
+  background: var(--red); transform: skewX(-14deg);
+}
+.stinger-bar.b2 { background: var(--bg-2); width: 60%; }
+.stinger-text {
+  position: absolute; top: 50%; left: 50%; translate: -50% -50%;
+  font-family: var(--font-num); font-size: 80px; letter-spacing: 12px; color: #fff; opacity: 0;
+}
+.stinger.run .stinger-bar { animation: sweep .75s cubic-bezier(.7, 0, .3, 1) forwards; }
+.stinger.run .stinger-bar.b2 { animation-delay: .06s; }
+.stinger.run.replay .stinger-text { animation: flash .75s forwards; }
+
+/* ---------- Keyframes ---------- */
+@keyframes rise    { to { opacity: 1; transform: none; } }
+@keyframes pulse   { 50% { opacity: .25; } }
+@keyframes ticker  { to { transform: translateX(50%); } }
+@keyframes sweep   { to { right: 120%; } }
+@keyframes flash   { 30%, 60% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes zoomIn  { to { transform: scale(1); opacity: 1; } }
+@keyframes shine   { to { transform: translateX(100%); } }
+@keyframes fadeIn  { from { opacity: 0; } }
+
+/* ---------- תנועה מופחתת ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .ticker-track { animation: none; }
+}

@@ -1,0 +1,107 @@
+/* ============ base.css – טוקנים, איפוס, טיפוגרפיה, כפתורים ============ */
+:root {
+  /* צבעים */
+  --bg: #0b0e14;
+  --bg-2: #11151e;
+  --panel: #161b26;
+  --panel-2: #1d2331;
+  --line: #2a3142;
+  --text: #f4f6fa;
+  --text-soft: #cfd5e1;
+  --muted: #8a93a6;
+  --red: #e03a3e;
+  --red-dark: #a3191d;
+  --il: #3a8dde;
+  --il-soft: #9cc8f2;
+  --gold: #f2c14e;
+  --green: #2ecc71;
+  --was: #5b7bd6;
+  --por: #e03a3e;
+
+  /* טיפוגרפיה */
+  --font-he: 'Heebo', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-num: 'Bebas Neue', 'Impact', 'Arial Narrow', sans-serif;
+
+  /* מידות */
+  --bug-h: 56px;
+  --nav-h: 56px;
+  --ticker-h: 36px;
+  --radius: 14px;
+  --gap: 16px;
+
+  /* תנועה */
+  --ease: cubic-bezier(.2, .8, .2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+* { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-he);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  background:
+    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(224, 58, 62, .12), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 0% 100%, rgba(58, 141, 222, .10), transparent 60%),
+    var(--bg);
+}
+
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: var(--il-soft); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+kbd {
+  font-family: var(--font-num);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0 6px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---------- היררכיה טיפוגרפית ---------- */
+.kicker {
+  font-family: var(--font-num); font-size: 18px; letter-spacing: 2px;
+  color: var(--red); margin: 0 0 8px;
+}
+h1, h2, h3 { margin: 0; }
+h2 { font-size: clamp(34px, 5vw, 60px); font-weight: 900; line-height: 1.05; margin-bottom: 16px; }
+h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+.lead { font-size: clamp(16px, 1.6vw, 20px); line-height: 1.6; color: var(--text-soft); max-width: 680px; margin: 0 0 20px; }
+.small { font-size: 13px; color: var(--muted); }
+.num { font-family: var(--font-num); font-weight: 400; letter-spacing: .5px; }
+
+/* ---------- כפתורים ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--panel-2); border: 1px solid var(--line);
+  padding: 12px 22px; border-radius: 999px; font-weight: 600; font-size: 16px;
+  transition: transform .2s var(--ease), background .2s, border-color .2s;
+}
+.btn:hover { transform: translateY(-2px); border-color: var(--muted); }
+.btn-primary { background: var(--red); border-color: var(--red); font-size: 18px; padding: 14px 30px; }
+.btn-primary:hover { background: #f04a4e; border-color: #f04a4e; }
+.btn-night { background: rgba(58, 141, 222, .14); border-color: var(--il); color: var(--il-soft); }
+.btn-night:hover { background: rgba(58, 141, 222, .26); border-color: var(--il-soft); }
+.btn-small { padding: 8px 16px; font-size: 14px; }
+
+/* ---------- כרטיס בסיס ---------- */
+.card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 20px;
+}

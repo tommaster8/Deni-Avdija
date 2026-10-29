@@ -1,0 +1,67 @@
+/* ============ responsive.css – טאבלט ונייד ============ */
+
+@media (max-width: 960px) {
+  .slide-inner.split { grid-template-columns: 1fr; gap: 28px; }
+  .stat-grid, .trophies { grid-template-columns: 1fr 1fr; }
+  .scout-grid { grid-template-columns: 1fr 1fr; }
+  .medals { gap: 12px; }
+  .medal-disc { width: 84px; height: 84px; font-size: 24px; }
+  .route { grid-template-columns: 1fr; gap: 0; }
+  .route::before { top: 0; bottom: 0; inset-inline: auto; inset-inline-start: 11px; width: 4px; height: auto;
+    background: linear-gradient(180deg, var(--was) 0%, var(--was) 45%, var(--por) 55%, var(--por) 100%); }
+  .route-stop { text-align: start; padding: 0 0 18px; padding-inline-start: 44px; }
+  .route-stop::before { top: 2px; left: auto; translate: none; inset-inline-start: 1px; }
+}
+
+@media (max-width: 640px) {
+  :root { --bug-h: 50px; --nav-h: 60px; --ticker-h: 32px; }
+  .scorebug { padding: 0 10px; gap: 6px; }
+  .bug-name, .bug-live { display: none; }
+  .bug-period { font-size: 18px; padding: 0 10px; margin: 8px 0; }
+  .clock-cell { padding: 0 8px; }
+  .clock-cell b { font-size: 19px; }
+
+  .slide { padding: 24px 16px; }
+  .slide-inner.center { justify-content: center; }
+  .tl-item { font-size: 16px; }
+  .tl-panel { padding: 18px 20px; }
+  .stat-tile { padding: 16px; }
+  .stat-tile b { font-size: 48px; }
+  .stat-grid, .trophies, .scout-grid { grid-template-columns: 1fr; }
+  .medals { grid-template-columns: 1fr; }
+  .medal { flex-direction: row; padding: 14px; text-align: start; }
+  .medal-disc { flex: none; width: 68px; height: 68px; font-size: 20px; }
+  .draft-card { padding: 20px 24px; }
+  .compare { height: 240px; }
+  .cmp-row b { font-size: 44px; }
+  .cmp-head { font-size: 20px; }
+  .bar-chart { gap: 6px; height: 240px; }
+  .bar-val { font-size: 17px; }
+  .bar-season { font-size: 12px; }
+  .legacy { grid-template-columns: 1fr; }
+  .legacy-step, .legacy-step:nth-child(2), .legacy-step.top { min-height: 0; }
+  .quiz-options { grid-template-columns: 1fr; }
+
+  .nav { gap: 10px; }
+  .nav-dots { gap: 4px; }
+  .nav-dots button { width: 7px; height: 7px; }
+  .nav-dots button.active { width: 16px; }
+  .night-clocks b { font-size: 48px; }
+  .night-clocks div { min-width: 0; padding: 8px 16px; }
+  .ticker-track span { font-size: 13px; }
+}
+
+/* מסכים נמוכים (מקרן 1280×720 עם סרגלי דפדפן) */
+@media (max-height: 760px) and (min-width: 961px) {
+  .slide { padding: 18px 16px; }
+  h2 { font-size: clamp(30px, 4vw, 46px); margin-bottom: 10px; }
+  .lead { margin-bottom: 12px; font-size: 17px; }
+  .bar-chart, .compare { height: 220px; }
+  .legacy { margin: 16px 0; }
+  .draft-card { padding: 16px 40px; margin: 6px 0 16px; }
+  .draft-pick { font-size: 120px; }
+  .scout-grid { gap: 12px; margin-top: 12px; }
+  .scout-card { padding: 14px 16px; gap: 4px; }
+  .scout-evidence { font-size: 30px; }
+  .stat-grid, .trophies { margin-top: 14px; }
+}

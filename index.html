@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Game Night: דני אבדיה</title>
+  <meta name="description" content="מצגת אינטראקטיבית: דני אבדיה – המסע ל־NBA">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Heebo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/night.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- ===================== Scorebug ===================== -->
+  <header class="scorebug" aria-label="סרגל שידור">
+    <div class="bug-team">
+      <span class="bug-live"><i></i>LIVE</span>
+      <span class="bug-num">8</span>
+      <span class="bug-name">AVDIJA</span>
+    </div>
+    <div class="bug-period" aria-label="שקופית נוכחית">
+      <span id="bug-quarter">PRE</span>
+      <span class="bug-sep">·</span>
+      <span id="bug-count">01/14</span>
+    </div>
+    <button class="bug-clock" id="clock" type="button" aria-label="השעון הישראלי – מצב ישראל ערה">
+      <span class="clock-cell">
+        <small id="clock-us-label">פורטלנד</small>
+        <b id="clock-us">--:--</b>
+      </span>
+      <span class="clock-cell il">
+        <small>ישראל</small>
+        <b id="clock-il">--:--</b>
+      </span>
+    </button>
+  </header>
+  <div class="progress" aria-hidden="true"><div id="progress-bar"></div></div>
+
+  <div class="stinger" id="stinger" aria-hidden="true">
+    <div class="stinger-bar"></div>
+    <div class="stinger-bar b2"></div>
+    <span class="stinger-text">REPLAY</span>
+  </div>
+
+  <main class="deck" id="deck">
+
+    <!-- ========== 1 · PRE · פתיחה ========== -->
+    <section class="slide slide-intro" data-quarter="PRE" data-title="פתיחה">
+      <div class="intro-bg" aria-hidden="true"><span class="intro-8">8</span></div>
+      <div class="slide-inner center">
+        <p class="kicker" data-anim>GAME NIGHT · מצגת אינטראקטיבית</p>
+        <h1 class="intro-title" data-anim>
+          <span class="line-1">דני אבדיה</span>
+          <span class="line-2">המסע ל־NBA</span>
+        </h1>
+        <p class="intro-en" data-anim>DENI AVDIJA</p>
+        <button class="btn btn-primary" data-anim data-action="next" type="button">▶ TIP-OFF – מתחילים</button>
+        <p class="hint" data-anim>חיצים, רווח או החלקה לניווט · <kbd>R</kbd> ל־Replay · <kbd>N</kbd> או לחיצה על השעון למצב "ישראל ערה"</p>
+      </div>
+    </section>
+
+    <!-- ========== 2 · PRE · כרטיס השחקן ========== -->
+    <section class="slide" data-quarter="PRE" data-title="כרטיס השחקן">
+      <div class="slide-inner split">
+        <div>
+          <p class="kicker" data-anim>PLAYER PROFILE</p>
+          <h2 data-anim>כרטיס השחקן</h2>
+          <p class="lead" data-anim>לחצו על הכרטיס כדי להפוך אותו ולגלות מאיפה הכישרון הגיע.</p>
+        </div>
+        <div>
+          <button class="flip-card" type="button" data-anim aria-label="הפיכת כרטיס השחקן">
+            <span class="flip-inner">
+              <span class="flip-face front">
+                <span class="card-top">
+                  <span class="card-team">PORTLAND TRAIL BLAZERS</span>
+                  <span class="card-num">#8</span>
+                </span>
+                <span class="card-silhouette" aria-hidden="true">
+                  <svg viewBox="0 0 120 140"><circle cx="60" cy="32" r="20"/><path d="M22 140 L30 78 Q34 58 60 58 Q86 58 90 78 L98 140 Z"/><text x="60" y="112" text-anchor="middle">8</text></svg>
+                </span>
+                <span class="card-name">DENI AVDIJA</span>
+                <span class="card-stats">
+                  <span><b>SF</b><small>עמדה</small></span>
+                  <span><b>2.03</b><small>מטר</small></span>
+                  <span><b>103</b><small>ק"ג</small></span>
+                  <span><b>2001</b><small>שנת לידה</small></span>
+                </span>
+                <span class="card-badge">★ NBA ALL-STAR 2026</span>
+              </span>
+              <span class="flip-face back">
+                <span class="card-team">DNA של כדורסל</span>
+                <span class="back-row"><b>אבא – זופר אבדיה</b>קפטן הכוכב האדום בלגרד ושחקן נבחרת יוגוסלביה, מדליית ארד באליפות העולם 1982</span>
+                <span class="back-row"><b>אמא – שרון ארצי</b>אתלטית וכדורסלנית לשעבר, מבית זרע</span>
+                <span class="back-row"><b>הכינוי</b>"Turbo"</span>
+                <span class="back-row"><b>נולד</b>3 בינואר 2001, קיבוץ בית זרע</span>
+              </span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 3 · Q1 · הילדות ותחילת הדרך ========== -->
+    <section class="slide" data-quarter="Q1" data-title="הילדות ותחילת הדרך">
+      <div class="slide-inner">
+        <p class="kicker" data-anim>1ST QUARTER · השורשים</p>
+        <h2 data-anim>מבית זרע להיכל</h2>
+        <div class="timeline" data-anim data-tabs="roots" role="tablist" aria-label="ציר זמן – תחילת הדרך">
+          <button class="tl-item" role="tab" type="button" data-tab><span>כיתה ד'</span></button>
+          <button class="tl-item" role="tab" type="button" data-tab><span>2013</span></button>
+          <button class="tl-item" role="tab" type="button" data-tab><span>2017–2019</span></button>
+          <button class="tl-item" role="tab" type="button" data-tab><span>2018–2019</span></button>
+        </div>
+        <div class="tab-panels" data-anim data-panels="roots">
+          <article class="tab-panel card tl-panel" data-panel role="tabpanel">
+            <h3>בני הרצליה</h3>
+            <p>דני מתחיל לשחק כדורסל בכיתה ד' במועדון בני הרצליה.</p>
+          </article>
+          <article class="tab-panel card tl-panel" data-panel role="tabpanel">
+            <h3>מצטרף למכבי תל אביב</h3>
+            <p>בגיל 12 הוא עובר למחלקת הנוער של מכבי תל אביב, המועדון הגדול בישראל.</p>
+          </article>
+          <article class="tab-panel card tl-panel" data-panel role="tabpanel">
+            <h3>שלוש אליפויות נוער ברצף</h3>
+            <p>מוביל את קבוצת הנוער של מכבי לשלוש אליפויות מדינה רצופות.</p>
+          </article>
+          <article class="tab-panel card tl-panel" data-panel role="tabpanel">
+            <h3>Basketball Without Borders</h3>
+            <p>נבחר ל־MVP במחנה של ה־NBA לכישרונות צעירים, פעמיים ברצף. הסקאוטים מתחילים לרשום את השם.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 4 · Q1 · מכבי תל אביב ========== -->
+    <section class="slide" data-quarter="Q1" data-title="מכבי תל אביב">
+      <div class="slide-inner">
+        <p class="kicker" data-anim>1ST QUARTER · מכבי תל אביב · 2017–2020</p>
+        <h2 data-anim>הילד של יד אליהו</h2>
+        <div class="stat-grid" data-anim>
+          <div class="card stat-tile">
+            <b><span data-count="16">16</span><small>שנים</small></b>
+            <p>ו־320 ימים: גילו בבכורה בבוגרים (19.11.2017). השחקן הצעיר ביותר אי פעם במכבי.</p>
+          </div>
+          <div class="card stat-tile">
+            <b><span data-count="3">3</span><small>אליפויות</small></b>
+            <p>אליפויות ליגת העל ברצף עם מכבי, 2018–2020.</p>
+          </div>
+          <div class="card stat-tile accent">
+            <b>MVP</b>
+            <p>השחקן המצטיין של ליגת העל 2020, בגיל 19. הצעיר אי פעם לזכות בתואר.</p>
+          </div>
+          <div class="card stat-tile">
+            <b>17<small>גיל</small></b>
+            <p>בכורה ביורוליג (נובמבר 2018). שנה אחר כך הוא כבר בחמישייה.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 5 · Q2 · דראפט 2020 ========== -->
+    <section class="slide slide-draft" data-quarter="Q2" data-title="דראפט NBA 2020" data-moment="draft">
+      <div class="slide-inner center">
+        <p class="kicker" data-anim>2ND QUARTER · NBA DRAFT 2020 · 19.11.2020</p>
+        <div class="draft-card" data-anim>
+          <span class="draft-label" dir="ltr">WITH THE 9TH PICK…</span>
+          <span class="draft-pick"><span data-count="9">9</span></span>
+          <span class="draft-team">WASHINGTON WIZARDS</span>
+          <span class="draft-name">SELECT DENI AVDIJA</span>
+        </div>
+        <p class="lead" data-anim>הבחירה הגבוהה ביותר אי פעם של שחקן ישראלי בדראפט.<br>
+          <strong>ועוד פרט קטן:</strong> בדיוק שלוש שנים קודם, ב־19.11.2017, הוא עלה לראשונה לבוגרים של מכבי.</p>
+        <button class="btn btn-night" type="button" data-action="night" data-anim>🌙 מה השעה הייתה בישראל?</button>
+      </div>
+    </section>
+
+    <!-- ========== 6 · Q2 · וושינגטון ויזארדס ========== -->
+    <section class="slide" data-quarter="Q2" data-title="וושינגטון ויזארדס" data-moment="career43">
+      <div class="slide-inner split">
+        <div>
+          <p class="kicker" data-anim>2ND QUARTER · WASHINGTON WIZARDS · 2020–2024</p>
+          <h2 data-anim>ארבע שנים של צמיחה</h2>
+          <p class="lead" data-anim>הוא מתחיל כשחקן הגנה וריבאונד, ובעונה הרביעית מתפוצץ: 14.7 נקודות ו־50.6% מהשדה.</p>
+          <ul class="facts" data-anim>
+            <li><b>אוקטובר 2023</b> חוזה הארכה: 4 שנים, 55 מיליון דולר</li>
+            <li><b>14.2.2024</b> שיא קריירה: 43 נקודות מול ניו אורלינס</li>
+          </ul>
+          <button class="btn btn-night" type="button" data-action="night" data-anim>🌙 מה השעה הייתה בישראל?</button>
+        </div>
+        <div>
+          <div class="card" data-anim>
+            <div class="chart-toggle" role="group" aria-label="בחירת מדד">
+              <button type="button" class="active" aria-pressed="true" data-line="pts">PTS</button>
+              <button type="button" aria-pressed="false" data-line="reb">REB</button>
+              <button type="button" aria-pressed="false" data-line="ast">AST</button>
+            </div>
+            <svg class="line-chart" id="line-chart" viewBox="0 0 400 260" role="img"></svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 7 · Q2 · התפתחות הקריירה ב־NBA ========== -->
+    <section class="slide" data-quarter="Q2" data-title="התפתחות הקריירה ב־NBA" data-moment="allstar">
+      <div class="slide-inner">
+        <p class="kicker" data-anim>2ND QUARTER · CAREER PATH</p>
+        <h2 data-anim>וושינגטון ← פורטלנד ← All-Star</h2>
+        <p class="lead" data-anim>ב־6.7.2024 דני עובר בטרייד לפורטלנד, ושם הוא הופך משחקן רוטציה לכוכב.</p>
+        <div class="route" data-anim>
+          <div class="route-stop">
+            <span class="route-team">WAS</span>
+            <span class="route-date">11.2020</span>
+            <b>רוקי ב־NBA</b>
+            <p>בחירה 9 בדראפט, ומתחיל את הקריירה בוושינגטון.</p>
+          </div>
+          <div class="route-stop">
+            <span class="route-team">WAS</span>
+            <span class="route-date">10.2023</span>
+            <b>חוזה הארכה</b>
+            <p>4 שנים ו־55 מיליון דולר. העונה הטובה שלו בוושינגטון.</p>
+          </div>
+          <div class="route-stop por">
+            <span class="route-team">POR</span>
+            <span class="route-date">07.2024</span>
+            <b>הטרייד</b>
+            <p>וושינגטון מקבלת את ברוגדון, את קרינגטון ובחירות דראפט.</p>
+          </div>
+          <div class="route-stop por star">
+            <span class="route-team">POR</span>
+            <span class="route-date">02.2026</span>
+            <b>★ All-Star</b>
+            <p>הישראלי הראשון אי פעם במשחק האולסטאר.</p>
+          </div>
+          <div class="route-stop por">
+            <span class="route-team">POR</span>
+            <span class="route-date">04.2026</span>
+            <b>פלייאוף</b>
+            <p>41 נקודות ב־Play-In מול פיניקס, ופורטלנד בפלייאוף.</p>
+          </div>
+        </div>
+        <button class="btn btn-night" type="button" data-action="night" data-anim>🌙 מה השעה הייתה בישראל בליל האולסטאר?</button>
+      </div>
+    </section>
+
+    <!-- ========== 8 · Q3 · לוח הסטטיסטיקה ========== -->
+    <section class="slide" data-quarter="Q3" data-title="נתונים לאורך העונות">
+      <div class="slide-inner">
+        <p class="kicker" data-anim>3RD QUARTER · BOX SCORE</p>
+        <h2 data-anim>שש עונות, קו אחד: למעלה</h2>
+        <div class="card" data-anim>
+          <div class="chart-toggle" role="group" aria-label="בחירת מדד">
+            <button type="button" class="active" aria-pressed="true" data-bar="pts">PTS</button>
+            <button type="button" aria-pressed="false" data-bar="reb">REB</button>
+            <button type="button" aria-pressed="false" data-bar="ast">AST</button>
+            <button type="button" aria-pressed="false" data-bar="fg">FG%</button>
+            <button type="button" aria-pressed="false" data-bar="tp">3P%</button>
+          </div>
+          <div class="bar-chart" id="bar-chart" role="img"></div>
+          <p class="chart-note"><span class="dot was"></span>וושינגטון <span class="dot por"></span>פורטלנד · ממוצעים בעונה הסדירה · Basketball-Reference</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 9 · Q3 · השוואת עונות ========== -->
+    <section class="slide" data-quarter="Q3" data-title="השוואת ביצועים בין עונות">
+      <div class="slide-inner">
+        <p class="kicker" data-anim>3RD QUARTER · BEFORE / AFTER</p>
+        <h2 data-anim>לפני ואחרי</h2>
+        <p class="lead" data-anim>העונה הטובה בוושינגטון מול העונה הראשונה כאולסטאר. גררו את הידית כדי להשוות.</p>
+        <div class="compare" data-anim>
+          <div class="compare-panel por">
+            <span class="cmp-head">POR · 2025–26</span>
+            <span class="cmp-row"><b>24.2</b>PTS</span>
+            <span class="cmp-row"><b>6.9</b>REB</span>
+            <span class="cmp-row"><b>6.7</b>AST</span>
+          </div>
+          <div class="compare-panel was">
+            <span class="cmp-head">WAS · 2023–24</span>
+            <span class="cmp-row"><b>14.7</b>PTS</span>
+            <span class="cmp-row"><b>7.2</b>REB</span>
+            <span class="cmp-row"><b>3.8</b>AST</span>
+          </div>
+          <div class="compare-handle" aria-hidden="true"></div>
+          <input type="range" id="compare-range" min="0" max="100" value="50" aria-label="השוואה בין 2023–24 ל־2025–26">
+        </div>
+        <span class="coming-soon" data-anim>⏳ בשלב הבא: בחירה חופשית של כל שתי עונות</span>
+      </div>
+    </section>
+
+    <!-- ========== 10 · Q3 · סגנון המשחק ========== -->
+    <section class="slide" data-quarter="Q3" data-title="סגנון המשחק והחוזקות">
+      <div class="slide-inner">
+        <p class="kicker" data-anim>3RD QUARTER · SCOUTING REPORT</p>
+        <h2 data-anim>איך דני משחק</h2>
+        <p class="lead" data-anim>כל חוזקה מוצגת יחד עם הנתון שמבסס אותה, בלי ציונים מומצאים.</p>
+        <div class="scout-grid" data-anim>
+          <article class="card scout-card">
+            <span class="scout-tag">SCORER</span>
+            <h3>קלע שמתפתח כל עונה</h3>
+            <div class="scout-evidence"><small>PTS</small>6.3 → 24.2</div>
+            <p>הממוצע שלו עלה כמעט פי 4, מעונת הרוקי ועד 2025–26.</p>
+            <span class="scout-src">Basketball-Reference</span>
+          </article>
+          <article class="card scout-card">
+            <span class="scout-tag">PLAYMAKER</span>
+            <h3>פוינט־פורוורד</h3>
+            <div class="scout-evidence"><small>AST</small>1.2 → 6.7</div>
+            <p>פורוורד בגובה 2.03 שמוביל כדור ויוצר לחברים.</p>
+            <span class="scout-src">Basketball-Reference</span>
+          </article>
+          <article class="card scout-card">
+            <span class="scout-tag">REBOUNDER</span>
+            <h3>ריבאונד יציב</h3>
+            <div class="scout-evidence"><small>REB</small>6.9–7.3</div>
+            <p>מעל 6.9 ריבאונדים למשחק בכל אחת משלוש העונות האחרונות.</p>
+            <span class="scout-src">Basketball-Reference</span>
+          </article>
+          <article class="card scout-card">
+            <span class="scout-tag">DEFENDER</span>
+            <h3>הגנה רב־עמדתית</h3>
+            <div class="scout-evidence"><small>POS</small>1–4</div>
+            <p>כבר בדראפט תואר כשחקן שיכול לשמור על עמדות 1 עד 4.</p>
+            <span class="scout-src">NBA.com – פרופיל הדראפט 2020</span>
+          </article>
+          <article class="card scout-card">
+            <span class="scout-tag">EFFICIENCY</span>
+            <h3>יעילות מהשדה</h3>
+            <div class="scout-evidence"><small>FG%</small>50.6%</div>
+            <p>שיא הקריירה שלו באחוזים מהשדה, בעונת 2023–24.</p>
+            <span class="scout-src">Basketball-Reference</span>
+          </article>
+          <article class="card scout-card growth">
+            <span class="scout-tag">GROWTH AREA</span>
+            <h3>קליעה מחוץ לקשת</h3>
+            <div class="scout-evidence"><small>3P%</small>37.4% → 31.8%</div>
+            <p>אחרי שתי עונות טובות, האחוז לשלוש ירד בעונת האולסטאר.</p>
+            <span class="scout-src">Basketball-Reference</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 11 · Q4 · נבחרת ישראל ========== -->
+    <section class="slide" data-quarter="Q4" data-title="נבחרת ישראל">
+      <div class="slide-inner">
+        <p class="kicker" data-anim>4TH QUARTER · ISRAEL NATIONAL TEAM</p>
+        <h2 data-anim>בכחול־לבן</h2>
+        <div class="seg" data-anim data-tabs="national" role="tablist" aria-label="נבחרת ישראל">
+          <button type="button" role="tab" data-tab>נבחרות נוער</button>
+          <button type="button" role="tab" data-tab>נבחרת בוגרת</button>
+        </div>
+        <div class="tab-panels" data-anim data-panels="national">
+          <div class="tab-panel" data-panel role="tabpanel">
+            <div class="medals">
+              <div class="medal">
+                <span class="medal-disc">2018</span>
+                <span class="medal-info"><b>זהב באליפות אירופה U20</b>דני בן 17, מהצעירים בסגל.</span>
+              </div>
+              <div class="medal">
+                <span class="medal-disc">2019</span>
+                <span class="medal-info"><b>זהב בתל אביב</b>ניצחון 92–84 על ספרד בגמר. 23 נקודות לדני.</span>
+              </div>
+              <div class="medal mvp">
+                <span class="medal-disc">MVP</span>
+                <span class="medal-info"><b>MVP הטורניר 2019</b>18.4 נק׳, 8.3 ריב׳ ו־5.3 אס׳ למשחק.</span>
+              </div>
+            </div>
+          </div>
+          <div class="tab-panel" data-panel role="tabpanel">
+            <div class="medals">
+              <div class="medal il">
+                <span class="medal-disc">2019</span>
+                <span class="medal-info"><b>בכורה בבוגרת</b>במוקדמות המונדיאל, בגיל 18.</span>
+              </div>
+              <div class="medal il">
+                <span class="medal-disc">24.0</span>
+                <span class="medal-info"><b>יורובאסקט 2025</b>נקודות למשחק, מהקלעים המובילים בטורניר. 6.8 ריב׳ ו־2.7 אס׳.</span>
+              </div>
+              <div class="medal">
+                <span class="medal-disc">★</span>
+                <span class="medal-info"><b>חמישיית המשנה</b>של יורובאסקט 2025. ניצחון 92–89 על בלגיה הוביל לשמינית הגמר.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 12 · Q4 · ארון ההישגים ========== -->
+    <section class="slide" data-quarter="Q4" data-title="הישגים מרכזיים">
+      <div class="slide-inner">
+        <p class="kicker" data-anim>4TH QUARTER · TROPHY CASE</p>
+        <h2 data-anim>ארון ההישגים</h2>
+        <div class="trophies" data-anim>
+          <div class="card trophy top"><span class="trophy-icon">★</span><span class="trophy-year">2026</span><b>NBA All-Star</b><p>הישראלי הראשון במשחק האולסטאר.</p></div>
+          <div class="card trophy"><span class="trophy-icon">🏅</span><span class="trophy-year">2026</span><b>מקום 3 בהצבעת MIP</b><p>השחקן שהשתפר ביותר בליגה, אחרי אלכסנדר־ווקר ודורן.</p></div>
+          <div class="card trophy"><span class="trophy-icon">🎯</span><span class="trophy-year">2020</span><b>בחירה 9 בדראפט</b><p>הבחירה הגבוהה ביותר אי פעם לישראלי.</p></div>
+          <div class="card trophy"><span class="trophy-icon">🇪🇺</span><span class="trophy-year">2025</span><b>חמישיית המשנה ביורובאסקט</b><p>לצד יוקיץ' ומרקאנן.</p></div>
+          <div class="card trophy"><span class="trophy-icon">🏆</span><span class="trophy-year">2020</span><b>MVP ליגת העל</b><p>הצעיר בהיסטוריה לזכות בתואר.</p></div>
+          <div class="card trophy"><span class="trophy-icon">🏆</span><span class="trophy-year">2018–2020</span><b>3 אליפויות ישראל</b><p>עם מכבי תל אביב.</p></div>
+          <div class="card trophy"><span class="trophy-icon">🥇</span><span class="trophy-year">2018, 2019</span><b>זהב אירופי U20</b><p>פעמיים ברצף, ו־MVP ב־2019.</p></div>
+          <div class="card trophy"><span class="trophy-icon">💥</span><span class="trophy-year">2024</span><b>43 נקודות</b><p>שיא הקריירה, מול ניו אורלינס.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 13 · Q4 · ההשפעה ========== -->
+    <section class="slide" data-quarter="Q4" data-title="ההשפעה על הכדורסל הישראלי">
+      <div class="slide-inner">
+        <p class="kicker" data-anim>4TH QUARTER · LEGACY</p>
+        <h2 data-anim>לשבור את התקרה</h2>
+        <div class="legacy" data-anim>
+          <div class="card legacy-step">
+            <span class="legacy-year">2009</span>
+            <b>עמרי כספי</b>
+            <p>הישראלי הראשון ששיחק ב־NBA (בחירה 23).</p>
+          </div>
+          <div class="card legacy-step">
+            <span class="legacy-year">2020</span>
+            <b>דני אבדיה</b>
+            <p>בחירה 9: הישראלי הגבוה ביותר בדראפט.</p>
+          </div>
+          <div class="card legacy-step top">
+            <span class="legacy-year">2026</span>
+            <b>ALL-STAR</b>
+            <p>ישראלי בין הכוכבים הגדולים של הליגה.</p>
+          </div>
+        </div>
+        <p class="lead" data-anim>מה שהיה פעם חלום רחוק, משחק ב־NBA, הפך אצל דני לנקודת התחלה. ילדים בישראל קמים היום באמצע הלילה כדי לראות ישראלי שהוא כוכב, ולא רק משתתף.</p>
+      </div>
+    </section>
+
+    <!-- ========== 14 · FINAL · חידון ומקורות ========== -->
+    <section class="slide" data-quarter="FINAL" data-title="סיכום, חידון ומקורות">
+      <div class="slide-inner split">
+        <div>
+          <p class="kicker" data-anim>POST-GAME · FINAL</p>
+          <h2 data-anim>חידון סיום</h2>
+          <div class="card" data-anim>
+            <p class="quiz-q" id="quiz-q"></p>
+            <div class="quiz-options" id="quiz-options"></div>
+            <p class="quiz-explain" id="quiz-explain" aria-live="polite"></p>
+            <div class="quiz-foot">
+              <span class="quiz-score">SCORE <b id="quiz-score">0</b>/<span id="quiz-total">3</span></span>
+              <button class="btn btn-small" id="quiz-next" type="button" hidden>הבא ←</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card sources" data-anim>
+            <h3>מקורות</h3>
+            <ul>
+              <li><a href="https://www.basketball-reference.com/players/a/avdijde01.html" target="_blank" rel="noopener">Basketball-Reference</a> – נתוני עונה ודראפט</li>
+              <li><a href="https://www.fiba.basketball/en/events/fiba-eurobasket-2025/news/all-star-second-team-loyd-osman-avdija-markkanen-jokic" target="_blank" rel="noopener">FIBA – EuroBasket 2025</a></li>
+              <li><a href="https://www.fiba.basketball/europe/u20/2019/news/spain-and-israel-dominate-the-all-star-five-with-mvp-avdija-grabbing-the-headlines" target="_blank" rel="noopener">FIBA – U20 2019 MVP</a></li>
+              <li><a href="https://www.nba.com/wizards/2020-nba-draft-profile-deni-avdija" target="_blank" rel="noopener">NBA.com – פרופיל הדראפט</a></li>
+              <li><a href="https://eurohoops.net/en/others/1085244/deni-avdija-becomes-youngest-mvp-in-israeli-league-history" target="_blank" rel="noopener">Eurohoops – MVP ליגת העל</a></li>
+              <li><a href="https://thescore.com/nba/news/3529677" target="_blank" rel="noopener">theScore – הצבעת MIP 2026</a></li>
+              <li><a href="https://en.wikipedia.org/wiki/Deni_Avdija" target="_blank" rel="noopener">Wikipedia</a> – ביוגרפיה ותאריכים</li>
+            </ul>
+            <p class="small">הנתונים נכונים לסוף עונת 2025–26. שעות "השעון הישראלי" הן הערכות.</p>
+            <p class="small">נבנה ב־HTML, CSS ו־JavaScript בשיתוף עם Claude Code · אוניברסיטת בר־אילן</p>
+            <button class="btn" type="button" data-action="restart">⟲ חזרה לפתיחה</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== Navigation ===================== -->
+  <nav class="nav" aria-label="ניווט שקופיות">
+    <button class="nav-btn" id="nav-prev" type="button" data-action="prev" aria-label="שקופית קודמת">→</button>
+    <div class="nav-center">
+      <span class="nav-label" id="nav-label" aria-hidden="true"></span>
+      <div class="nav-dots" id="nav-dots"></div>
+    </div>
+    <button class="nav-btn" id="nav-next" type="button" data-action="next" aria-label="שקופית הבאה">←</button>
+  </nav>
+
+  <footer class="ticker" aria-hidden="true">
+    <span class="ticker-label">DENI FACTS</span>
+    <div class="ticker-window"><div class="ticker-track" id="ticker-track"></div></div>
+  </footer>
+
+  <!-- ===================== "ישראל ערה" ===================== -->
+  <div class="night" id="night" role="dialog" aria-modal="true" aria-labelledby="night-title" hidden>
+    <div class="night-sky" aria-hidden="true"><div class="moon"></div></div>
+    <svg class="night-city" id="night-city" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
+    <div class="night-content">
+      <p class="kicker" id="night-date"></p>
+      <h2 id="night-title"></h2>
+      <div class="night-clocks">
+        <div><small id="night-us-city"></small><b id="night-us"></b></div>
+        <div class="il"><small>ישראל</small><b id="night-il"></b></div>
+      </div>
+      <p class="night-line" id="night-line"></p>
+      <p class="small">* שעה משוערת</p>
+      <button class="btn" type="button" id="night-close">חזרה לשידור</button>
+    </div>
+  </div>
+
+  <div class="sr-only" id="announcer" aria-live="polite"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/core/utils.js"></script>
+  <script src="js/core/navigation.js"></script>
+  <script src="js/core/clock.js"></script>
+  <script src="js/components/interactions.js"></script>
+  <script src="js/components/charts.js"></script>
+  <script src="js/components/quiz.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
