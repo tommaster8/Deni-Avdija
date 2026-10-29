@@ -10,7 +10,8 @@
 |---|---|
 | [`docs/PRD.md`](docs/PRD.md) | מסמך הדרישות: מטרות, קהל יעד, דרישות, קריטריוני קבלה, אבני דרך, סיכונים, ומרשם עובדות עם מקור לכל נתון |
 | [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) | דו"ח הבדיקות: 25 בדיקות, בעיות, תיקונים, ומה לא נבדק |
-| [`docs/AI_CONVERSATION_LOG.md`](docs/AI_CONVERSATION_LOG.md) | יומן העבודה עם ה־AI: הנחיות, החלטות, הצעות, תיקונים, והוראות לייצוא השיחה המלאה |
+| [`docs/AI_CONVERSATION_LOG.md`](docs/AI_CONVERSATION_LOG.md) | יומן העבודה עם ה־AI: הנחיות, החלטות, הצעות ותיקונים, לפי תורות |
+| [`docs/ai-transcript/TRANSCRIPT.md`](docs/ai-transcript/TRANSCRIPT.md) | **התמלול המלא** של השיחה עם ה־AI, מילה במילה, מתוך ייצוא הסשן |
 | [`docs/DECISION_LOG.md`](docs/DECISION_LOG.md) | יומן החלטות שנכתב לאורך כל העבודה, שלב אחר שלב |
 | [GitHub](https://github.com/tommaster8/Deni-Avdija) | הקוד וההיסטוריה המלאה של השינויים |
 
@@ -154,6 +155,7 @@ scripts/
   transcript_to_md.py          המרת ייצוא השיחה עם ה־AI ל־Markdown
 docs/
   PRD.md · TEST_REPORT.md · AI_CONVERSATION_LOG.md · DECISION_LOG.md
+  ai-transcript/TRANSCRIPT.md  התמלול המלא של השיחה עם ה־AI
   screenshots/                 9 צילומי מסך
   archive/                     קבצי אב־הטיפוס v1 (להשוואה, לא נפתחים כמצגת)
 ```
@@ -198,7 +200,7 @@ python3 -m http.server 5173
 | 6. בדיקות | 25 בדיקות אוטומטיות ו־7 תיקונים | `2a27962` · `TEST_REPORT.md` |
 | 7. תיעוד | README, יומן שיחות וצילומי מסך | Commit התיעוד |
 
-**שיטת העבודה עם ה־AI:** מנהל הפרויקט כתב הנחיה מפורטת לכל שלב. ה־AI הציע אפשרויות, המליץ, ביצע, ובדק בעצמו בדפדפן. החלטות משמעותיות (קונספט, PRD, Repository, Push, הורדת תמונות) התקבלו רק אחרי אישור מפורש. הפירוט המלא נמצא ב־[`AI_CONVERSATION_LOG.md`](docs/AI_CONVERSATION_LOG.md).
+**שיטת העבודה עם ה־AI:** מנהל הפרויקט כתב הנחיה מפורטת לכל שלב. ה־AI הציע אפשרויות, המליץ, ביצע, ובדק בעצמו בדפדפן. החלטות משמעותיות (קונספט, PRD, Repository, Push, הורדת תמונות) התקבלו רק אחרי אישור מפורש. הפירוט המלא נמצא ב־[`AI_CONVERSATION_LOG.md`](docs/AI_CONVERSATION_LOG.md), והשיחה עצמה, מילה במילה, ב־[`TRANSCRIPT.md`](docs/ai-transcript/TRANSCRIPT.md).
 
 ## 11. השיפורים בין הגרסאות
 | גרסה | מה השתפר |
