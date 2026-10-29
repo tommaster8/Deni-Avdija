@@ -106,7 +106,8 @@ GN.nav = (() => {
       if (GN.overlayOpen) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const target = e.target instanceof Element ? e.target : document.body;
-      const onRange = target.matches('input[type="range"], select');
+      // חיצים בתוך בקר (סליידר, רשימה, טאבים) שייכים לבקר ולא מחליפים שקופית
+      const onRange = target.matches('input[type="range"], select') || !!target.closest('[role="tablist"]');
       switch (e.key) {
         case 'ArrowLeft': if (!onRange) { e.preventDefault(); next(); } break; // RTL: שמאלה = קדימה
         case 'ArrowRight': if (!onRange) { e.preventDefault(); prev(); } break;

@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/night.css">
+  <link rel="stylesheet" href="css/interactive.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
@@ -112,36 +113,23 @@
       </div>
     </section>
 
-    <!-- ========== 3 · Q1 · תחילת הדרך ========== -->
-    <section class="slide" data-quarter="Q1" data-title="תחילת הדרך">
+    <!-- ========== 3 · Q1 · ציר הקריירה ========== -->
+    <section class="slide" data-quarter="Q1" data-title="ציר הקריירה">
       <div class="slide-inner">
-        <p class="kicker" data-anim>1ST QUARTER · THE BEGINNING</p>
-        <h2 data-anim>הכישרון מתגלה</h2>
-        <div class="timeline" data-anim data-tabs="roots" role="tablist" aria-label="ציר זמן – תחילת הדרך">
-          <button class="tl-item" role="tab" type="button" data-tab><span>כיתה ד'</span></button>
-          <button class="tl-item" role="tab" type="button" data-tab><span>2013</span></button>
-          <button class="tl-item" role="tab" type="button" data-tab><span>2018</span></button>
-          <button class="tl-item" role="tab" type="button" data-tab><span>2019</span></button>
+        <p class="kicker" data-anim>1ST QUARTER · CAREER TIMELINE</p>
+        <h2 data-anim>המסע, תחנה אחר תחנה</h2>
+        <div class="ctl" data-anim>
+          <div class="ctl-rail">
+            <div class="ctl-progress" aria-hidden="true"><i id="ctl-fill"></i></div>
+            <div class="ctl-track" id="ctl-track" role="tablist" aria-label="ציר הקריירה – בחרו שנה"></div>
+          </div>
+          <article class="ctl-card card" id="ctl-card" role="tabpanel" aria-live="polite"></article>
+          <div class="ctl-controls">
+            <button class="nav-btn" id="ctl-prev" type="button" aria-label="התחנה הקודמת">→</button>
+            <span class="ctl-count" id="ctl-count">1 / 9</span>
+            <button class="nav-btn" id="ctl-next" type="button" aria-label="התחנה הבאה">←</button>
+          </div>
         </div>
-        <div class="tab-panels" data-anim data-panels="roots">
-          <article class="tab-panel card tl-panel" data-panel role="tabpanel">
-            <h3>הכדור הראשון<sup class="unverified" title="דורש אימות">⚠</sup></h3>
-            <p>מתחיל לשחק בכיתה ד', במועדון <strong>בני הרצליה</strong>.</p>
-          </article>
-          <article class="tab-panel card tl-panel" data-panel role="tabpanel">
-            <h3>מכבי תל אביב<sup class="unverified" title="דורש אימות">⚠</sup></h3>
-            <p>בגיל 12 הוא עובר למחלקת הנוער של <strong>מכבי תל אביב</strong>.</p>
-          </article>
-          <article class="tab-panel card tl-panel" data-panel role="tabpanel">
-            <h3>MVP בבלגרד</h3>
-            <p>נבחר <strong>MVP</strong> של מחנה Basketball Without Borders Europe, המחנה של ה־NBA ו־FIBA לכישרונות צעירים.</p>
-          </article>
-          <article class="tab-panel card tl-panel" data-panel role="tabpanel">
-            <h3>MVP עולמי</h3>
-            <p>נבחר שוב <strong>MVP</strong>, הפעם ב־Basketball Without Borders Global. הסקאוטים של ה־NBA כבר מכירים את השם.</p>
-          </article>
-        </div>
-        <p class="small" data-anim>לחצו על שנה בציר הזמן</p>
       </div>
     </section>
 
@@ -284,15 +272,20 @@
         <h2 data-anim>שש עונות, כיוון אחד: למעלה</h2>
         <div class="card" data-anim>
           <p class="chart-title">ממוצע למשחק · עונה סדירה · <span dir="ltr">2020–21</span> עד <span dir="ltr">2025–26</span></p>
-          <div class="chart-toggle" role="group" aria-label="בחירת מדד">
+          <div class="chart-toggle" role="group" aria-label="בחירת מדד לגרף">
             <button type="button" class="active" aria-pressed="true" data-bar="pts">PTS</button>
             <button type="button" aria-pressed="false" data-bar="reb">REB</button>
             <button type="button" aria-pressed="false" data-bar="ast">AST</button>
             <button type="button" aria-pressed="false" data-bar="fg">FG%</button>
             <button type="button" aria-pressed="false" data-bar="tp">3P%</button>
           </div>
-          <div class="bar-chart" id="bar-chart" role="img"></div>
-          <p class="chart-note"><span class="dot was"></span>וושינגטון <span class="dot por"></span>פורטלנד · מקור: Basketball-Reference</p>
+          <p class="bar-metric" id="bar-metric-label" aria-live="polite">נקודות למשחק</p>
+          <div class="bar-wrap">
+            <div class="bar-axis" id="bar-axis" aria-hidden="true"></div>
+            <div class="bar-chart" id="bar-chart" role="group"></div>
+            <div class="bar-tip" id="bar-tip" role="tooltip" hidden></div>
+          </div>
+          <p class="chart-note"><span class="dot was"></span>וושינגטון <span class="dot por"></span>פורטלנד · רחפו או הקישו על עמודה לפרטים · Basketball-Reference</p>
         </div>
         <div class="career-line" data-anim>
           <div><b data-count="425">425</b><span>משחקים</span></div>
@@ -306,32 +299,22 @@
     <!-- ========== 9 · Q3 · השוואת עונות ========== -->
     <section class="slide" data-quarter="Q3" data-title="השוואת ביצועים בין עונות">
       <div class="slide-inner">
-        <p class="kicker" data-anim>3RD QUARTER · BEFORE / AFTER</p>
-        <h2 data-anim>לפני ואחרי</h2>
-        <p class="lead" data-anim>העונה הטובה בוושינגטון מול עונת האולסטאר בפורטלנד. גררו את הידית.</p>
-        <div class="compare" data-anim>
-          <div class="compare-panel por">
-            <span class="cmp-head">POR · <span dir="ltr">2025–26</span></span>
-            <span class="cmp-row"><b>24.2</b>PTS</span>
-            <span class="cmp-row"><b>6.9</b>REB</span>
-            <span class="cmp-row"><b>6.7</b>AST</span>
-          </div>
-          <div class="compare-panel was">
-            <span class="cmp-head">WAS · <span dir="ltr">2023–24</span></span>
-            <span class="cmp-row"><b>14.7</b>PTS</span>
-            <span class="cmp-row"><b>7.2</b>REB</span>
-            <span class="cmp-row"><b>3.8</b>AST</span>
-          </div>
-          <div class="compare-handle" aria-hidden="true"></div>
-          <input type="range" id="compare-range" min="0" max="100" value="50" aria-label="השוואה בין 2023–24 ל־2025–26">
+        <p class="kicker" data-anim>3RD QUARTER · SEASON VS SEASON</p>
+        <h2 data-anim>בחרו שתי עונות</h2>
+        <div class="cmp-controls" data-anim>
+          <label class="cmp-pick a"><span>עונה א׳</span><select id="cmp-a" aria-label="עונה א׳"></select></label>
+          <button class="cmp-swap" id="cmp-swap" type="button" aria-label="החלפה בין העונות">⇄</button>
+          <label class="cmp-pick b"><span>עונה ב׳</span><select id="cmp-b" aria-label="עונה ב׳"></select></label>
         </div>
-        <div class="delta-row" data-anim>
-          <span><b class="up">+9.5</b> נק׳</span>
-          <span><b class="down">−0.3</b> ריב׳</span>
-          <span><b class="up">+2.9</b> אס׳</span>
-          <small>ממוצע למשחק, עונה סדירה · Basketball-Reference</small>
+        <div class="card cmp-board" data-anim>
+          <div class="cmp-chips">
+            <div class="cmp-chip a" id="cmp-chip-a"></div>
+            <span class="cmp-vs">VS</span>
+            <div class="cmp-chip b" id="cmp-chip-b"></div>
+          </div>
+          <div class="cmp-rows" id="cmp-rows"></div>
+          <p class="cmp-note">ממוצע למשחק ואחוזי קליעה · עונה סדירה · Basketball-Reference · אורך הפס יחסי לשיא הקריירה בכל מדד<span id="cmp-same" hidden> · בחרתם אותה עונה פעמיים</span></p>
         </div>
-        <span class="coming-soon" data-anim>⏳ בשלב הבא: בחירה חופשית של כל שתי עונות</span>
       </div>
     </section>
 
@@ -477,13 +460,24 @@
         <div>
           <p class="kicker" data-anim>POST-GAME · FINAL</p>
           <h2 data-anim>חידון סיום</h2>
-          <div class="card" data-anim>
-            <p class="quiz-q" id="quiz-q"></p>
-            <div class="quiz-options" id="quiz-options"></div>
-            <p class="quiz-explain" id="quiz-explain" aria-live="polite"></p>
-            <div class="quiz-foot">
-              <span class="quiz-score">SCORE <b id="quiz-score">0</b>/<span id="quiz-total">3</span></span>
-              <button class="btn btn-small" id="quiz-next" type="button" hidden>הבא ←</button>
+          <div class="card quiz" data-anim>
+            <div class="quiz-top">
+              <span class="quiz-step" id="quiz-step">שאלה 1</span>
+              <span class="quiz-score">SCORE <b id="quiz-score">0</b>/<span id="quiz-total">7</span></span>
+            </div>
+            <div class="quiz-bar" aria-hidden="true"><i id="quiz-progress"></i></div>
+            <div id="quiz-body">
+              <p class="quiz-q" id="quiz-q"></p>
+              <div class="quiz-options" id="quiz-options"></div>
+              <p class="quiz-explain" id="quiz-explain" aria-live="polite"></p>
+              <div class="quiz-foot"><button class="btn btn-small btn-primary" id="quiz-next" type="button" hidden>השאלה הבאה ←</button></div>
+            </div>
+            <div class="quiz-summary" id="quiz-summary" hidden>
+              <span class="kicker">FINAL SCORE</span>
+              <div class="quiz-big"><b id="quiz-final">0</b><span>/<span id="quiz-final-total">7</span></span></div>
+              <p class="quiz-rating" id="quiz-rating"></p>
+              <ol class="quiz-review" id="quiz-review"></ol>
+              <button class="btn btn-primary btn-small" id="quiz-restart" type="button">⟲ שחקו שוב</button>
             </div>
           </div>
         </div>
@@ -552,7 +546,9 @@
   <script src="js/core/navigation.js"></script>
   <script src="js/core/clock.js"></script>
   <script src="js/components/interactions.js"></script>
+  <script src="js/components/timeline.js"></script>
   <script src="js/components/charts.js"></script>
+  <script src="js/components/compare.js"></script>
   <script src="js/components/quiz.js"></script>
   <script src="js/app.js"></script>
 </body>

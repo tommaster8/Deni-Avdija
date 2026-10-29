@@ -13,3 +13,19 @@ GN.svgEl = (tag, attrs = {}) => {
 
 // אירוע כניסה לשקופית: רכיבים נרשמים ומגיבים כשהשקופית שלהם נכנסת
 GN.onSlideEnter = (handler) => document.addEventListener('gn:slideenter', (e) => handler(e.detail.slide, e.detail.index));
+
+// הנפשת מספר מערך לערך (עם האטה בסוף). משמש למספרים רצים, לגרפים ולהשוואה.
+GN.tween = (el, from, to, { decimals = 0, suffix = '', duration = 900 } = {}) => {
+  const fmt = (v) => `${v.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}${suffix}`;
+  cancelAnimationFrame(el._tween);
+  if (GN.reduceMotion || from === to) { el.textContent = fmt(to); return; }
+  const start = performance.now();
+  const tick = (now) => {
+    const t = Math.min(1, (now - start) / duration);
+    el.textContent = fmt(from + (to - from) * (1 - Math.pow(1 - t, 3)));
+    if (t < 1) el._tween = requestAnimationFrame(tick);
+  };
+  el._tween = requestAnimationFrame(tick);
+};
+
+GN.decimalsOf = (v) => (String(v).split('.')[1] || '').length;

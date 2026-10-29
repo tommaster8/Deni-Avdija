@@ -56,33 +56,87 @@ GN.charts = (() => {
     }
   }
 
-  // ---------- גרף עמודות ----------
+  // ---------- גרף עמודות דינמי ----------
+  // החלפת מדד לא מאפסת את הגרף: העמודות והמספרים עוברים מהערך הקודם לערך החדש.
   let barMetric = 'pts';
+  let shownMetric = null; // המדד שמוצג כרגע (null = הגרף עדיין לא צויר בכניסה הזו)
 
   function buildBars() {
     const chart = $('bar-chart');
-    SEASONS.forEach((s) => {
+    SEASONS.forEach((s, i) => {
       const bar = document.createElement('div');
       bar.className = `bar ${s.team.toLowerCase()}`;
-      bar.innerHTML = `<div class="bar-fill"><span class="bar-val"></span></div><span class="bar-season">${s.season}</span>`;
+      bar.tabIndex = 0;
+      bar.dataset.i = i;
+      bar.innerHTML = `<div class="bar-col"><div class="bar-fill"><span class="bar-val">0</span></div></div><span class="bar-season">${s.season}</span>`;
       chart.appendChild(bar);
     });
+
+    // טולטיפ בריחוף או בפוקוס: עונה, קבוצה, מספר משחקים וערך
+    const tip = $('bar-tip');
+    const show = (bar) => {
+      const s = SEASONS[bar.dataset.i];
+      const m = METRICS[barMetric];
+      tip.innerHTML = `<b>${s.season} · ${s.team}</b>${m.label}: <strong>${formatValue(barMetric, s[barMetric])}</strong><small>${s.games} משחקים · עונה סדירה</small>`;
+      const box = tip.parentElement.getBoundingClientRect();
+      const r = bar.querySelector('.bar-fill').getBoundingClientRect();
+      tip.style.left = `${r.left - box.left + r.width / 2}px`;
+      tip.style.top = `${r.top - box.top}px`;
+      tip.hidden = false;
+      GN.$$('.bar', chart).forEach((b) => b.classList.toggle('dim', b !== bar));
+    };
+    const hide = () => { tip.hidden = true; GN.$$('.bar', chart).forEach((b) => b.classList.remove('dim')); };
+    GN.$$('.bar', chart).forEach((bar) => {
+      bar.addEventListener('mouseenter', () => show(bar));
+      bar.addEventListener('focus', () => show(bar));
+      bar.addEventListener('click', () => show(bar));
+    });
+    chart.addEventListener('mouseleave', hide);
+    chart.addEventListener('focusout', (e) => { if (!chart.contains(e.relatedTarget)) hide(); });
+  }
+
+  function niceStep(x) {
+    const p = 10 ** Math.floor(Math.log10(x));
+    const n = x / p;
+    return [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10].find((c) => n <= c) * p;
+  }
+
+  function drawAxis(max, metric) {
+    const axis = $('bar-axis');
+    axis.innerHTML = '';
+    for (let k = 1; k <= 4; k++) {
+      const v = (max / 4) * k;
+      const line = document.createElement('span');
+      line.style.bottom = `${(k / 4) * 100}%`;
+      line.innerHTML = `<em>${+v.toFixed(1)}${METRICS[metric].pct ? '%' : ''}</em>`;
+      axis.appendChild(line);
+    }
   }
 
   function drawBars(metric = barMetric) {
     const chart = $('bar-chart');
-    const max = Math.max(...SEASONS.map((s) => s[metric])) * 1.12;
-    [...chart.children].forEach((bar, i) => {
+    // סקאלה "עגולה": 4 קווי רשת בצעד מתוך סדרת ערכים נוחים (כפול חזקת 10)
+    const step = niceStep((Math.max(...SEASONS.map((s) => s[metric])) * 1.08) / 4);
+    const max = step * 4;
+    const fresh = shownMetric === null;
+    const prev = shownMetric;
+    drawAxis(max, metric);
+    $('bar-tip').hidden = true;
+
+    GN.$$('.bar', chart).forEach((bar, i) => {
       const v = SEASONS[i][metric];
       const fill = bar.querySelector('.bar-fill');
-      bar.querySelector('.bar-val').textContent = formatValue(metric, v);
-      fill.style.transitionDelay = '0ms';
-      fill.style.height = '0%';
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        fill.style.transitionDelay = `${i * 70}ms`;
-        fill.style.height = `${(v / max) * 100}%`;
-      }));
+      const val = bar.querySelector('.bar-val');
+      const from = fresh ? 0 : SEASONS[i][prev];
+      const delay = fresh ? i * 70 : i * 30;
+      if (fresh) { fill.style.transition = 'none'; fill.style.height = '0%'; void fill.offsetHeight; fill.style.transition = ''; }
+      fill.style.transitionDelay = `${delay}ms`;
+      fill.style.height = `${(v / max) * 100}%`;
+      setTimeout(() => GN.tween(val, from, v, { decimals: 1, suffix: METRICS[metric].pct ? '%' : '' }), delay);
+      bar.setAttribute('aria-label', `${SEASONS[i].season}: ${formatValue(metric, v)} ${METRICS[metric].label}`);
     });
+    $('bar-metric-label').textContent = METRICS[metric].label;
+    shownMetric = metric;
     chart.setAttribute('aria-label', `${METRICS[metric].label} לפי עונה: ` +
       SEASONS.map((s) => `${s.season} ${s[metric]}`).join(', '));
   }
@@ -106,9 +160,9 @@ GN.charts = (() => {
     bindToggle('data-bar', (m) => { barMetric = m; drawBars(); });
     GN.onSlideEnter((slide) => {
       if (slide.querySelector('#line-chart')) drawLine();
-      if (slide.querySelector('#bar-chart')) drawBars();
+      if (slide.querySelector('#bar-chart')) { shownMetric = null; drawBars(); }
     });
   }
 
-  return { init };
+  return { init, drawBars, metric: () => barMetric };
 })();

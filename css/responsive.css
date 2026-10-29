@@ -32,15 +32,11 @@
   .medal { flex-direction: row; padding: 14px; text-align: start; }
   .medal-disc { flex: none; width: 68px; height: 68px; font-size: 20px; }
   .draft-card { padding: 20px 24px; }
-  .compare { height: 240px; }
-  .cmp-row b { font-size: 44px; }
-  .cmp-head { font-size: 20px; }
   .bar-chart { gap: 6px; height: 240px; }
   .bar-val { font-size: 17px; }
   .bar-season { font-size: 12px; }
   .legacy { grid-template-columns: 1fr; }
   .legacy-step, .legacy-step:nth-child(2), .legacy-step.top { min-height: 0; }
-  .quiz-options { grid-template-columns: 1fr; }
 
   .nav { gap: 10px; }
   .nav-dots { gap: 4px; }
@@ -56,7 +52,7 @@
   .slide { padding: 18px 16px; }
   h2 { font-size: clamp(30px, 4vw, 46px); margin-bottom: 10px; }
   .lead { margin-bottom: 12px; font-size: 17px; }
-  .bar-chart, .compare { height: 210px; }
+  .bar-chart { height: 210px; }
   .legacy { margin: 16px 0; }
   .draft-card { padding: 16px 40px; margin: 6px 0 16px; }
   .draft-pick { font-size: 120px; }
@@ -89,4 +85,14 @@
   .career-line b { font-size: 32px; }
   .nt-list li { padding: 8px 12px; }
   .nt-badge { width: 48px; height: 48px; font-size: 17px; }
+}
+
+/* רכיבים אינטראקטיביים במסך נמוך (מקרן) */
+@media (max-height: 760px) and (min-width: 961px) {
+  .bar-chart { height: 190px; }
+  .bar-metric { margin-bottom: 2px; }
+  .career-line { margin-top: 6px; }
+  .cmp-controls { margin: 0 0 8px; }
+  .cmp-pick select { font-size: 19px; padding-block: 6px 4px; }
+  .cmp-chips { margin-bottom: 6px; }
 }

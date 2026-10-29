@@ -31,16 +31,19 @@ css/
   layout.css                מעטפת השידור: Scorebug, שקופיות, ניווט, טיקר
   components.css            רכיבי התוכן של כל השקופיות
   night.css                 מצב "ישראל ערה"
+  interactive.css           ציר הקריירה, גרף דינמי, השוואת עונות, חידון, אפקטי לחיצה
   animations.css            בסיס האנימציות, keyframes, תנועה מופחתת
   responsive.css            טאבלט, נייד ומסכים נמוכים
 js/
-  data.js                   כל הנתונים (עונות, שעון, טיקר, חידון)
+  data.js                   כל הנתונים: עונות, ציר זמן, צילומים, שעון, טיקר, חידון
   core/utils.js             מרחב השמות GN וכלי עזר
   core/navigation.js        ניווט ואינדיקציה לשקופית הנוכחית
   core/clock.js             השעון הישראלי ומצב "ישראל ערה"
-  components/interactions.js  טאבים, כרטיס מתהפך, סליידר, מספרים רצים, טיקר
-  components/charts.js      גרף קווי וגרף עמודות (SVG)
-  components/quiz.js        חידון הסיום
+  components/interactions.js  טאבים, כרטיס מתהפך, מספרים רצים, טיקר, אפקט ripple
+  components/timeline.js    ציר הקריירה האינטראקטיבי (9 תחנות)
+  components/charts.js      גרף קווי, וגרף עמודות דינמי עם ציר וטולטיפ
+  components/compare.js     השוואה בין כל שתי עונות
+  components/quiz.js        חידון עם משוב, ניקוד ומסך סיכום
   app.js                    נקודת הכניסה
 assets/img/                 תמונות (בשלב הבא, אחרי אישור)
 docs/
