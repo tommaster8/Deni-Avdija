@@ -76,7 +76,9 @@ GN.nav = (() => {
     const num = String(current + 1).padStart(2, '0');
     $('bug-quarter').textContent = slide.dataset.quarter;
     $('bug-count').textContent = `${num}/${total}`;
-    $('nav-label').innerHTML = `<b>${num}</b>${slide.dataset.title}`;
+    const nextSlide = slides[current + 1];
+    $('nav-label').innerHTML = `<b>${num}</b>${slide.dataset.title}` +
+      (nextSlide ? `<span class="next-up">בהמשך: ${nextSlide.dataset.title}</span>` : '');
     $('progress-bar').style.width = `${((current + 1) / total) * 100}%`;
     [...$('nav-dots').children].forEach((d, i) => {
       d.classList.toggle('active', i === current);

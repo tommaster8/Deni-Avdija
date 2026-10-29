@@ -32,11 +32,12 @@ GN.ui = (() => {
 
   function countUp(el) {
     const target = Number(el.dataset.count);
-    if (GN.reduceMotion) { el.textContent = target; return; }
+    const show = (v) => { el.textContent = v.toLocaleString('en-US'); };
+    if (GN.reduceMotion) { show(target); return; }
     const start = performance.now();
     const tick = (now) => {
       const t = Math.min(1, (now - start) / 1100);
-      el.textContent = Math.round(target * (1 - Math.pow(1 - t, 3)));
+      show(Math.round(target * (1 - Math.pow(1 - t, 3))));
       if (t < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);

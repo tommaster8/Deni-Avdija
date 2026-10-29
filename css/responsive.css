@@ -56,7 +56,7 @@
   .slide { padding: 18px 16px; }
   h2 { font-size: clamp(30px, 4vw, 46px); margin-bottom: 10px; }
   .lead { margin-bottom: 12px; font-size: 17px; }
-  .bar-chart, .compare { height: 220px; }
+  .bar-chart, .compare { height: 210px; }
   .legacy { margin: 16px 0; }
   .draft-card { padding: 16px 40px; margin: 6px 0 16px; }
   .draft-pick { font-size: 120px; }
@@ -64,4 +64,29 @@
   .scout-card { padding: 14px 16px; gap: 4px; }
   .scout-evidence { font-size: 30px; }
   .stat-grid, .trophies { margin-top: 14px; }
+}
+
+/* ---------- תמונות ותוכן: נייד ומסכים נמוכים ---------- */
+@media (max-width: 960px) {
+  .split-photo { grid-template-columns: 1fr; }
+  .split-photo .photo img { aspect-ratio: 16 / 10; max-height: 320px; }
+}
+@media (max-width: 640px) {
+  .draft-facts { grid-template-columns: 1fr; }
+  .draft-facts div { flex-direction: row; gap: 12px; justify-content: flex-start; }
+  .draft-facts b { font-size: 30px; min-width: 64px; }
+  .stat-grid.two { grid-template-columns: 1fr 1fr; }
+  .stat-grid.two .stat-tile b { font-size: 38px; }
+  .nav-label .next-up { display: none; }
+  .photo-wide img { height: 150px; }
+  .career-line b { font-size: 32px; }
+}
+@media (max-height: 760px) and (min-width: 961px) {
+  .photo-wide img { height: 120px; }
+  .draft-facts b { font-size: 32px; }
+  .draft-facts { margin-bottom: 14px; }
+  .career-line { margin-top: 10px; }
+  .career-line b { font-size: 32px; }
+  .nt-list li { padding: 8px 12px; }
+  .nt-badge { width: 48px; height: 48px; font-size: 17px; }
 }

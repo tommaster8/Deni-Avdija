@@ -2,7 +2,7 @@
 
 /* ---------- 1. Intro ---------- */
 .slide-intro { overflow: hidden; }
-.intro-bg { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.intro-bg { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; overflow: hidden; }
 .intro-8 {
   font-family: var(--font-num); font-size: min(90vh, 80vw); line-height: .8;
   color: transparent; -webkit-text-stroke: 2px rgba(224, 58, 62, .18);
@@ -233,3 +233,86 @@
 .quiz-score { font-family: var(--font-num); font-size: 24px; letter-spacing: 1px; }
 .quiz-score b { color: var(--gold); font-weight: 400; }
 .sources ul { padding-inline-start: 20px; line-height: 1.9; font-size: 14px; }
+
+/* ============ תוכן ותמונות (שלב התוכן) ============ */
+
+/* ---------- סימון "דורש אימות" ---------- */
+.unverified { color: var(--gold); font-size: .6em; margin-inline-start: 4px; cursor: help; }
+
+/* ---------- פתיחה ---------- */
+.intro-teaser { font-size: clamp(15px, 1.6vw, 19px); color: var(--text-soft); margin: -16px 0 28px; }
+
+/* ---------- תמונה עם קרדיט ---------- */
+.photo {
+  position: relative; margin: 0; border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--line); background: var(--panel);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .45);
+}
+.photo img { display: block; width: 100%; height: 100%; max-height: calc(100dvh - 260px); object-fit: cover; object-position: center 25%; }
+.photo::after { /* פס אדום בסגנון שידור */
+  content: ''; position: absolute; top: 0; inset-inline-start: 0; width: 6px; height: 100%; background: var(--red);
+}
+.photo figcaption {
+  position: absolute; inset: auto 0 0 0; display: flex; flex-direction: column; gap: 2px;
+  padding: 28px 18px 10px; background: linear-gradient(0deg, rgba(11, 14, 20, .92), transparent);
+  font-size: 14px; font-weight: 600;
+}
+.photo .credit { font-size: 11px; font-weight: 400; color: rgba(255, 255, 255, .65); text-decoration: none; direction: ltr; text-align: end; }
+.photo .credit:hover { text-decoration: underline; }
+.photo-wide { margin-bottom: 14px; }
+.photo-wide img { height: 170px; object-position: center 62%; }
+.split-photo { grid-template-columns: 1.15fr .85fr; }
+.split-photo .photo img { aspect-ratio: 4 / 5; }
+
+/* ---------- מכבי: רשת 2×2 ---------- */
+.stat-grid.two { grid-template-columns: 1fr 1fr; margin-top: 12px; }
+.stat-grid.two .stat-tile { padding: 16px 18px; }
+.stat-grid.two .stat-tile b { font-size: 52px; }
+.stat-grid.two .stat-tile p { font-size: 14px; margin-top: 8px; }
+
+/* ---------- דראפט ---------- */
+.draft-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 760px; width: 100%; margin-bottom: 24px; }
+.draft-facts div { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.draft-facts b { font-family: var(--font-num); font-weight: 400; font-size: 40px; line-height: 1; color: var(--gold); }
+.draft-facts span { font-size: 14px; color: var(--text-soft); }
+
+/* ---------- כותרת גרף (יחידות) ---------- */
+.chart-title { margin: 0 0 8px; font-size: 13px; color: var(--muted); }
+
+/* ---------- שורת סיכום קריירה ---------- */
+.career-line { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 36px; margin-top: 18px; }
+.career-line div { display: flex; align-items: baseline; gap: 8px; }
+.career-line b { font-family: var(--font-num); font-weight: 400; font-size: 40px; color: var(--gold); line-height: 1; }
+.career-line span { color: var(--text-soft); font-size: 15px; }
+.career-line small { flex-basis: 100%; text-align: center; color: var(--muted); font-size: 12px; }
+
+/* ---------- הפרשים בין עונות ---------- */
+.delta-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 28px; margin-top: 14px; font-size: 16px; color: var(--text-soft); }
+.delta-row b { font-family: var(--font-num); font-weight: 400; font-size: 32px; direction: ltr; display: inline-block; }
+.delta-row .up { color: var(--green); }
+.delta-row .down { color: #ff8a8d; }
+.delta-row small { flex-basis: 100%; color: var(--muted); font-size: 12px; }
+
+/* ---------- נבחרת ---------- */
+.nt-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.nt-list li {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+  font-size: 15px; line-height: 1.45; color: var(--text-soft);
+}
+.nt-list b { display: block; color: var(--text); font-size: 16px; }
+.nt-badge {
+  flex: none; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--font-num); font-size: 20px; color: #1a1300;
+  background: radial-gradient(circle at 35% 30%, #fff3c4, var(--gold) 45%, #a77a12);
+}
+.nt-badge.mvp { background: radial-gradient(circle at 35% 30%, #ffd2d3, var(--red) 50%, var(--red-dark)); color: #fff; }
+.nt-badge.il { background: radial-gradient(circle at 35% 30%, #d6ebff, var(--il) 50%, #1d4f86); color: #fff; }
+
+/* ---------- קרדיטים ---------- */
+.sources h3 { font-size: 18px; margin-top: 4px; }
+.sources .credits { font-size: 13px; line-height: 1.7; }
+
+/* ---------- "בהמשך" בסרגל הניווט ---------- */
+.nav-label .next-up { color: var(--muted); margin-inline-start: 10px; }
+.nav-label .next-up::before { content: '· '; }
