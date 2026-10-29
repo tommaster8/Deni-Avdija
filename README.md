@@ -13,6 +13,7 @@
 | [`docs/AI_CONVERSATION_LOG.md`](docs/AI_CONVERSATION_LOG.md) | יומן העבודה עם ה־AI: הנחיות, החלטות, הצעות ותיקונים, לפי תורות |
 | [`docs/ai-transcript/TRANSCRIPT.md`](docs/ai-transcript/TRANSCRIPT.md) | **התמלול המלא** של השיחה עם ה־AI, מילה במילה, מתוך ייצוא הסשן |
 | [`docs/DECISION_LOG.md`](docs/DECISION_LOG.md) | יומן החלטות שנכתב לאורך כל העבודה, שלב אחר שלב |
+| [`docs/SUBMISSION_REPORT.md`](docs/SUBMISSION_REPORT.md) | דו"ח ההגשה: מה הושלם, מה חלקי, ומה לאמת מול המרצה |
 | [GitHub](https://github.com/tommaster8/Deni-Avdija) | הקוד וההיסטוריה המלאה של השינויים |
 
 ---
@@ -154,7 +155,7 @@ tests/
 scripts/
   transcript_to_md.py          המרת ייצוא השיחה עם ה־AI ל־Markdown
 docs/
-  PRD.md · TEST_REPORT.md · AI_CONVERSATION_LOG.md · DECISION_LOG.md
+  PRD.md · TEST_REPORT.md · AI_CONVERSATION_LOG.md · DECISION_LOG.md · SUBMISSION_REPORT.md
   ai-transcript/TRANSCRIPT.md  התמלול המלא של השיחה עם ה־AI
   screenshots/                 9 צילומי מסך
   archive/                     קבצי אב־הטיפוס v1 (להשוואה, לא נפתחים כמצגת)
