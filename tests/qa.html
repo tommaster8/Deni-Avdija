@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QA – בדיקות אוטומטיות</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #0b0e14; color: #f4f6fa; margin: 0; padding: 16px; }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    p { color: #8a93a6; margin: 0 0 12px; font-size: 14px; }
+    button { font: inherit; padding: 8px 18px; border-radius: 8px; border: 0; background: #e03a3e; color: #fff; cursor: pointer; }
+    #summary { margin: 12px 0; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: start; padding: 6px 8px; border-bottom: 1px solid #2a3142; vertical-align: top; }
+    td.pass { color: #2ecc71; } td.fail { color: #ff6b6e; } td.info { color: #f2c14e; }
+    code { direction: ltr; unicode-bidi: isolate; }
+    /* המסגרת גלויה (כמעט שקופה) כדי שהדפדפן לא יעצור בה אנימציות */
+    #stage { position: fixed; left: 0; top: 0; border: 0; opacity: .05; pointer-events: none; z-index: 10; }
+  </style>
+</head>
+<body>
+  <h1>QA – Game Night: דני אבדיה</h1>
+  <p>הבדיקות טוענות את המצגת בתוך iframe בגדלים שונים ומפעילות אותה באמת: לחיצות, מקשים ושינויי בחירה. התוצאות נשמרות גם ב־<code>window.QA_RESULTS</code>.</p>
+  <button id="run" type="button">▶ הרצת כל הבדיקות</button>
+  <div id="summary"></div>
+  <table><thead><tr><th>#</th><th>בדיקה</th><th>תוצאה</th><th>פירוט</th></tr></thead><tbody id="out"></tbody></table>
+  <iframe id="stage" title="stage"></iframe>
+
+<script>
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const results = [];
+window.QA_RESULTS = results;
+let W, D, DATA; // window ו־document של המצגת הנבדקת, והנתונים שלה
+const errors = [];
+
+function report(id, name, status, detail = '') {
+  results.push({ id, name, status, detail });
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${id}</td><td>${name}</td><td class="${status}">${status === 'pass' ? '✓ עבר' : status === 'fail' ? '✗ נכשל' : 'ℹ מידע'}</td><td>${detail}</td>`;
+  document.getElementById('out').appendChild(tr);
+}
+const check = (id, name, ok, detail) => report(id, name, ok ? 'pass' : 'fail', detail);
+
+async function load(w, h, hash = '#1') {
+  const f = document.getElementById('stage');
+  f.style.width = `${w}px`; f.style.height = `${h}px`;
+  f.src = `../index.html?qa=${Math.random()}${hash}`;
+  await new Promise((r) => (f.onload = r));
+  W = f.contentWindow; D = W.document;
+  W.addEventListener('error', (e) => errors.push(`${w}x${h}: ${e.message || 'resource ' + (e.target && (e.target.src || e.target.href))}`), true);
+  W.addEventListener('unhandledrejection', (e) => errors.push(`${w}x${h}: promise ${e.reason}`));
+  const ce = W.console.error.bind(W.console);
+  W.console.error = (...a) => { errors.push(`${w}x${h}: console.error ${a.join(' ')}`); ce(...a); };
+  // הנתונים מוגדרים ב־const ברמה העליונה, ולכן אינם מאפיינים של window
+  DATA = W.eval('({ SEASONS, METRICS, TIMELINE, PHOTOS, QUIZ, TICKER_ITEMS })');
+  await sleep(500);
+}
+const $ = (id) => D.getElementById(id);
+const count = () => $('bug-count').textContent;
+const key = (k, target = D.body) => target.dispatchEvent(new W.KeyboardEvent('keydown', { key: k, bubbles: true }));
+const go = async (i) => { W.GN.nav.goTo(i); await sleep(900); };
+const fmt = (m, v) => (DATA.METRICS[m].pct ? `${v.toFixed(1)}%` : v.toFixed(1));
+
+// ---------------------------------------------------------------- פונקציונליות
+async function functional() {
+  await load(1280, 720);
+  const slides = [...D.querySelectorAll('.slide')];
+
+  // F1 – כל השקופיות נטענות
+  const bad = [];
+  for (let i = 0; i < slides.length; i++) {
+    await go(i);
+    const s = W.GN.nav.current();
+    const visible = W.getComputedStyle(s).visibility === 'visible';
+    const text = s.innerText.trim().length;
+    if (s !== slides[i] || !visible || text < 20 || count() !== `${String(i + 1).padStart(2, '0')}/14`) bad.push(i + 1);
+  }
+  check('F1', 'כל 14 השקופיות נטענות ומוצגות', slides.length === 14 && !bad.length, `${slides.length} שקופיות${bad.length ? `, בעיה ב: ${bad}` : ''}`);
+
+  // F2 – ניווט בעכבר
+  await go(0);
+  const prevDisabled = $('nav-prev').disabled;
+  for (let i = 0; i < 13; i++) { $('nav-next').click(); await sleep(850); }
+  const reachedEnd = count() === '14/14' && $('nav-next').disabled;
+  $('nav-prev').click(); await sleep(850);
+  const back = count() === '13/14';
+  D.querySelectorAll('#nav-dots button')[4].click(); await sleep(850);
+  const dot = count() === '05/14';
+  D.querySelector('.slide.active [data-action="next"], .slide-intro [data-action="next"]');
+  await go(0); D.querySelector('.slide-intro [data-action="next"]').click(); await sleep(850);
+  const tipoff = count() === '02/14';
+  check('F2', 'ניווט בעכבר: הבא, הקודם, נקודות, TIP-OFF', prevDisabled && reachedEnd && back && dot && tipoff,
+    `הקודם מושבת ב־1: ${prevDisabled} · 13× הבא → 14 והבא מושבת: ${reachedEnd} · הקודם → 13: ${back} · נקודה 5: ${dot} · TIP-OFF: ${tipoff}`);
+
+  // F3 – ניווט במקלדת
+  await go(0); const k = {};
+  key('ArrowLeft'); await sleep(850); k.left = count();
+  key('ArrowRight'); await sleep(850); k.right = count();
+  key(' '); await sleep(850); k.space = count();
+  key('PageDown'); await sleep(850); k.pgdn = count();
+  key('PageUp'); await sleep(850); k.pgup = count();
+  key('End'); await sleep(850); k.end = count();
+  key('Home'); await sleep(850); k.home = count();
+  key('r'); await sleep(60); k.replay = $('stinger').classList.contains('replay'); await sleep(850);
+  key('n'); await sleep(60); k.nightOpen = !$('night').hidden;
+  key('ArrowLeft'); await sleep(850); k.blockedWhileOverlay = count();
+  key('Escape'); await sleep(60); k.nightClosed = $('night').hidden;
+  W.location.hash = '#7'; await sleep(900); k.hash = count();
+  const ok3 = k.left === '02/14' && k.right === '01/14' && k.space === '02/14' && k.pgdn === '03/14' && k.pgup === '02/14' && k.end === '14/14' && k.home === '01/14' && k.replay && k.nightOpen && k.blockedWhileOverlay === '01/14' && k.nightClosed && k.hash === '07/14';
+  check('F3', 'ניווט במקלדת: ←, →, רווח, PgDn/PgUp, End/Home, R, N/Esc, קישור #7', ok3, JSON.stringify(k));
+
+  // F4 – כל הכפתורים מגיבים
+  const known = (b) => b.matches('[data-action], #nav-dots button, [data-line], [data-bar], .ctl-stop, #ctl-prev, #ctl-next, [data-tab], .flip-card, #quiz-options button, #quiz-next, #quiz-restart, #cmp-swap, #clock, #night-close');
+  const all = [...D.querySelectorAll('button')];
+  const orphan = all.filter((b) => !known(b));
+  const effects = [];
+  await go(1); const fc = D.querySelector('.flip-card'); fc.click(); effects.push(['כרטיס מתהפך', fc.classList.contains('flipped')]); fc.click();
+  await go(10); const tabs = D.querySelectorAll('.seg [data-tab]'); tabs[1].click();
+  effects.push(['טאב נבחרת בוגרת', D.querySelectorAll('[data-panels="national"] > [data-panel]')[1].classList.contains('active')]); tabs[0].click();
+  await go(4); D.querySelector('.slide.active [data-action="night"]').click(); await sleep(50);
+  effects.push(['כפתור "מה השעה הייתה בישראל"', !$('night').hidden && $('night-il').textContent === '04:00']);
+  $('night-close').click(); effects.push(['חזרה לשידור', $('night').hidden]);
+  $('clock').click(); effects.push(['לחיצה על השעון', !$('night').hidden]); $('night-close').click();
+  await go(13); D.querySelector('[data-action="restart"]').click(); await sleep(900); effects.push(['חזרה לפתיחה', count() === '01/14']);
+  const failed = effects.filter((e) => !e[1]).map((e) => e[0]);
+  check('F4', 'כל הכפתורים מחוברים לפעולה ומגיבים', !orphan.length && !failed.length,
+    `${all.length} כפתורים, ללא מטפל: ${orphan.length}${failed.length ? ` · לא הגיבו: ${failed}` : ''} · נבדקו: ${effects.map((e) => e[0]).join(', ')}`);
+
+  // F5 – ציר הזמן מציג מידע נכון
+  await go(2);
+  const stops = [...D.querySelectorAll('.ctl-stop')];
+  const tlBad = [];
+  for (let i = 0; i < stops.length; i++) {
+    stops[i].click(); await sleep(60);
+    const t = DATA.TIMELINE[i];
+    const card = $('ctl-card');
+    const year = card.querySelector('.ctl-year').textContent;
+    const evs = card.querySelectorAll('li').length;
+    const img = card.querySelector('img');
+    const imgOk = t.photo ? img && img.src === DATA.PHOTOS[t.photo].src : !img;
+    const sel = stops[i].getAttribute('aria-selected') === 'true' && stops.filter((s) => s.classList.contains('active')).length === 1;
+    if (year !== t.year || evs !== t.events.length || card.querySelector('h3').textContent !== t.title || !imgOk || !sel) tlBad.push(t.year);
+  }
+  stops[3].focus(); key('ArrowLeft', stops[3]); await sleep(900);
+  const arrowOk = $('ctl-card').querySelector('.ctl-year').textContent === '2020' && count() === '03/14';
+  check('F5', 'ציר הזמן: כל תחנה מציגה שנה, כותרת, אירועים ותמונה נכונים', !tlBad.length && arrowOk,
+    `${stops.length} תחנות${tlBad.length ? `, שגויות: ${tlBad}` : ', כולן תקינות'} · חץ במקלדת עובר תחנה בלי להחליף שקופית: ${arrowOk}`);
+
+  // F6 – גרפים מציגים נתונים נכונים
+  await go(7); const chartBad = [];
+  for (const m of ['pts', 'reb', 'ast', 'fg', 'tp']) {
+    D.querySelector(`[data-bar="${m}"]`).click(); await sleep(1300);
+    const vals = [...D.querySelectorAll('.bar-val')].map((v) => v.textContent);
+    const exp = DATA.SEASONS.map((s) => fmt(m, s[m]));
+    const hs = [...D.querySelectorAll('.bar-fill')].map((f) => f.getBoundingClientRect().height);
+    const ratioOk = DATA.SEASONS.every((s, i) => Math.abs(hs[i] / hs[5] - s[m] / DATA.SEASONS[5][m]) < 0.02);
+    const axisMax = parseFloat([...D.querySelectorAll('#bar-axis em')].pop().textContent);
+    if (vals.join() !== exp.join() || !ratioOk || axisMax < Math.max(...DATA.SEASONS.map((s) => s[m]))) chartBad.push(m);
+  }
+  await go(5); const lineBad = [];
+  for (const m of ['pts', 'reb', 'ast']) {
+    D.querySelector(`[data-line="${m}"]`).click(); await sleep(300);
+    const lbl = [...D.querySelectorAll('#line-chart .pt-label')].map((t) => t.textContent).join();
+    if (lbl !== DATA.SEASONS.filter((s) => s.team === 'WAS').map((s) => s[m].toFixed(1)).join()) lineBad.push(m);
+  }
+  check('F6', 'גרפים: ערכים, יחס גבהים וציר תואמים ל־SEASONS (גרף עמודות + קווי)', !chartBad.length && !lineBad.length,
+    `עמודות: ${chartBad.length ? 'שגוי ב־' + chartBad : '5 מדדים תקינים'} · קווי: ${lineBad.length ? 'שגוי ב־' + lineBad : '3 מדדים תקינים'}`);
+
+  // F7 – השוואת עונות: כל 36 הצירופים
+  await go(8); const cmpBad = [];
+  for (const a of DATA.SEASONS) for (const b of DATA.SEASONS) {
+    $('cmp-a').value = a.season; $('cmp-a').dispatchEvent(new W.Event('change'));
+    $('cmp-b').value = b.season; $('cmp-b').dispatchEvent(new W.Event('change'));
+    await sleep(1000);
+    for (const m of ['pts', 'reb', 'ast', 'fg', 'tp']) {
+      const row = D.querySelector(`.cmp-r[data-m="${m}"]`);
+      const d = Math.round((b[m] - a[m]) * 10) / 10;
+      const okVals = row.querySelector('.cmp-v.a').textContent === fmt(m, a[m]) && row.querySelector('.cmp-v.b').textContent === fmt(m, b[m]);
+      const dt = row.querySelector('.cmp-delta').textContent;
+      const okDelta = d === 0 ? dt === '=' : dt.includes(Math.abs(d).toFixed(1)) && dt.includes(d > 0 ? '▲' : '▼');
+      if (!okVals || !okDelta) cmpBad.push(`${a.season}/${b.season}/${m}`);
+    }
+    if (cmpBad.length > 5) break;
+  }
+  $('cmp-swap').click(); await sleep(1000);
+  const swapped = $('cmp-a').value === DATA.SEASONS[5].season;
+  check('F7', 'השוואת עונות: כל 36 צירופי העונות × 5 מדדים, כולל הפרש וכפתור החלפה', !cmpBad.length && swapped, cmpBad.length ? `שגיאות: ${cmpBad.slice(0, 5)}` : '180 ערכים והפרשים תקינים · החלפה עובדת');
+
+  // F8 – ניקוד החידון
+  await go(13);
+  const play = async (pick) => {
+    $('quiz-restart').click(); await sleep(50);
+    for (let i = 0; i < DATA.QUIZ.length; i++) {
+      const btns = D.querySelectorAll('#quiz-options button');
+      btns[pick(i)].click(); btns[(pick(i) + 1) % 4].click(); // לחיצה כפולה לא אמורה להשפיע
+      $('quiz-next').click(); await sleep(20);
+    }
+    await sleep(900);
+    return { final: $('quiz-final').textContent, summary: !$('quiz-summary').hidden, wrong: D.querySelectorAll('#quiz-review li.bad').length };
+  };
+  const allRight = await play((i) => DATA.QUIZ[i].answer);
+  const allWrong = await play((i) => (DATA.QUIZ[i].answer + 1) % 4);
+  const mixed = await play((i) => (i % 2 ? DATA.QUIZ[i].answer : (DATA.QUIZ[i].answer + 1) % 4));
+  const expMixed = DATA.QUIZ.filter((_, i) => i % 2).length;
+  check('F8', 'החידון מחשב ניקוד נכון (7/7, 0/7, משולב) ומציג סיכום', allRight.final === '7' && allWrong.final === '0' && mixed.final === String(expMixed) && allRight.summary && allWrong.wrong === 7,
+    `הכל נכון: ${allRight.final} · הכל שגוי: ${allWrong.final} (${allWrong.wrong} מסומנות שגויות) · משולב: ${mixed.final}/${DATA.QUIZ.length} (צפוי ${expMixed})`);
+
+  // F9 – אנימציות
+  const an = {};
+  await go(0); W.GN.nav.goTo(3); await sleep(60);
+  an.stinger = $('stinger').classList.contains('run');
+  await sleep(400);
+  an.entrance = [...W.GN.nav.current().querySelectorAll('[data-anim]')].some((el) => el.getAnimations().some((a) => a.animationName === 'rise'));
+  await sleep(1300);
+  an.entranceDone = [...W.GN.nav.current().querySelectorAll('[data-anim]')].every((el) => W.getComputedStyle(el).opacity === '1');
+  await go(3); const num = D.querySelector('.slide.active [data-count="16"]'); W.GN.nav.replay(); await sleep(450 + 300);
+  an.countMid = num.textContent; await sleep(1200); an.countEnd = num.textContent;
+  await go(7); D.querySelector('[data-bar="reb"]').click(); await sleep(200);
+  an.barMid = D.querySelector('.bar:last-child .bar-val').textContent; await sleep(1200); an.barEnd = D.querySelector('.bar:last-child .bar-val').textContent;
+  const btn = D.querySelector('[data-bar="pts"]'); const r = btn.getBoundingClientRect();
+  btn.dispatchEvent(new W.PointerEvent('pointerdown', { bubbles: true, clientX: r.left + 5, clientY: r.top + 5 }));
+  an.ripple = !!btn.querySelector('.ripple');
+  await go(4); W.GN.clock.open(); await sleep(2500); an.windowsLit = D.querySelectorAll('.win.on, .win.screen').length; W.GN.clock.close();
+  const ok9 = an.stinger && an.entrance && an.entranceDone && an.countMid !== an.countEnd && an.countEnd === '16' && an.barMid !== an.barEnd && an.barEnd === '6.9' && an.ripple && an.windowsLit > 50;
+  check('F9', 'אנימציות: מעבר Replay, כניסה, מספרים רצים, גרף, ripple, חלונות העיר', ok9, JSON.stringify(an));
+}
+
+// ---------------------------------------------------------------- עיצוב ו־UX
+const SIZES = [[360, 740], [390, 844], [768, 1024], [1024, 768], [1280, 720], [1440, 900], [1920, 1080]];
+async function ux() {
+  const rows = [];
+  for (const [w, h] of SIZES) {
+    await load(w, h);
+    const hs = []; const vs = [];
+    for (let i = 0; i < 14; i++) {
+      await go(i);
+      const s = W.GN.nav.current();
+      if (D.documentElement.scrollWidth > W.innerWidth + 1 || s.scrollWidth > s.clientWidth + 1) hs.push(i + 1);
+      if (s.scrollHeight - s.clientHeight > 2) vs.push(i + 1);
+    }
+    rows.push({ w, h, hs, vs });
+  }
+  const desktop = rows.filter((r) => r.w >= 1024);
+  check('U1', 'אין גלילה אופקית בשום גודל מסך', rows.every((r) => !r.hs.length), rows.map((r) => `${r.w}×${r.h}: ${r.hs.length ? 'אופקית ב־' + r.hs : 'תקין'}`).join(' · '));
+  check('U2', 'מחשב/מקרן (1024+): כל שקופית במסך אחד בלי גלילה', desktop.every((r) => !r.vs.length), desktop.map((r) => `${r.w}×${r.h}: ${r.vs.length ? 'גלילה ב־' + r.vs : 'תקין'}`).join(' · '));
+  const mob = rows.filter((r) => r.w < 1024);
+  report('U2b', 'טאבלט/נייד: שקופיות עם גלילה אנכית (מתוכנן)', 'info', mob.map((r) => `${r.w}×${r.h}: ${r.vs.length} שקופיות`).join(' · '));
+
+  // קריאות: טקסט גלוי קטן מ־12px
+  await load(1280, 720);
+  const small = new Set();
+  for (let i = 0; i < 14; i++) {
+    await go(i);
+    W.GN.nav.current().querySelectorAll('*').forEach((el) => {
+      if (el.matches('.unverified') || ![...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) return;
+      const cs = W.getComputedStyle(el);
+      if (parseFloat(cs.fontSize) < 12 && cs.visibility === 'visible' && el.offsetParent) small.add(`${el.className || el.tagName}:${cs.fontSize}`);
+    });
+  }
+  check('U3', 'קריאות: אין טקסט גלוי קטן מ־12px (ב־1280×720)', !small.size, small.size ? [...small].slice(0, 12).join(', ') : 'תקין');
+
+  // ניגודיות צבעים לפי הטוקנים (WCAG)
+  const css = W.getComputedStyle(D.documentElement);
+  const tok = (n) => css.getPropertyValue(n).trim();
+  const lum = (hex) => { const c = hex.replace('#', '').match(/../g).map((x) => parseInt(x, 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
+  const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+  // --red משמש לגרפיקה ולכפתורים (סף 3:1), ו־--red-text לטקסט קטן (סף 4.5:1)
+  const pairs = [['--text', '--bg', 4.5], ['--text-soft', '--panel', 4.5], ['--muted', '--bg', 4.5], ['--muted', '--panel', 4.5], ['--muted', '--panel-2', 4.5], ['--red', '--bg', 3], ['--red-text', '--bg', 4.5], ['--red-text', '--panel', 4.5], ['--gold', '--panel', 4.5], ['--il-soft', '--panel', 4.5], ['--green', '--panel', 4.5]];
+  const cr = pairs.map(([f, b, min]) => ({ f, b, min, r: ratio(tok(f), tok(b)) }));
+  const lowC = cr.filter((p) => p.r < p.min);
+  check('U4', 'ניגודיות צבעים (WCAG AA) לזוגות הטוקנים העיקריים', !lowC.length, cr.map((p) => `${p.f}/${p.b}: ${p.r.toFixed(2)}${p.r < p.min ? ` (<${p.min}!)` : ''}`).join(' · '));
+
+  // RTL
+  const rtl = D.documentElement.dir === 'rtl' && D.documentElement.lang === 'he';
+  const risky = [];
+  const walker = D.createTreeWalker(D.body, W.NodeFilter.SHOW_TEXT);
+  let n; const re = /\d{2,4}[–-]\d{2,4}/;
+  while ((n = walker.nextNode())) {
+    if (!re.test(n.textContent) || n.textContent.includes('⁦')) continue;
+    const el = n.parentElement;
+    if (el.closest('[dir="ltr"], script, style, .chart-toggle, .bar-season, .cmp-pick, .kicker, svg, .ctl-tag')) continue;
+    if (W.getComputedStyle(el).direction === 'ltr') continue;
+    risky.push(n.textContent.trim().slice(0, 30));
+  }
+  check('U5', 'RTL: dir/lang תקינים, ואין טווחי מספרים שעלולים להתהפך', rtl && !risky.length, `dir=${D.documentElement.dir} lang=${D.documentElement.lang}${risky.length ? ` · בסיכון: ${risky.slice(0, 6).join(' | ')}` : ' · כל הטווחים מבודדים'}`);
+
+  // ביצועים
+  await sleep(1500);
+  const nav = W.performance.getEntriesByType('navigation')[0];
+  const res = W.performance.getEntriesByType('resource');
+  const local = res.filter((r) => r.name.startsWith(W.location.origin));
+  const ext = res.filter((r) => !r.name.startsWith(W.location.origin));
+  const kb = (arr) => Math.round(arr.reduce((s, r) => s + (r.decodedBodySize || r.transferSize || 0), 0) / 1024);
+  const imgs = ext.filter((r) => /upload\.wikimedia/.test(r.name));
+  report('U6', 'ביצועים: זמני טעינה ומשקל (שרת מקומי)', 'info',
+    `DOMContentLoaded: ${Math.round(nav.domContentLoadedEventEnd)}ms · load: ${Math.round(nav.loadEventEnd)}ms · קבצי הפרויקט: ${local.length + 1} קבצים, ${kb(local) + Math.round((nav.decodedBodySize || 0) / 1024)}KB · חיצוני: ${ext.length} בקשות (גופנים ${ext.filter((r) => /font/.test(r.name)).length}, תמונות ${imgs.length}${kb(imgs) ? `, ${kb(imgs)}KB` : ', גודל לא נחשף (CORS)'})`);
+  const lazy = [...D.images].every((i) => i.loading === 'lazy' || i.closest('#ctl-card'));
+  check('U6b', 'תמונות נטענות בעצלות (loading="lazy") ועם מידות מוגדרות', lazy && [...D.querySelectorAll('.slide img')].filter((i) => !i.closest('#ctl-card')).every((i) => i.getAttribute('width') && i.getAttribute('height')), `${D.images.length} תמונות במסמך`);
+
+  // נגישות בסיסית
+  const a = {};
+  a.h1 = D.querySelectorAll('h1').length;
+  a.imgNoAlt = [...D.images].filter((i) => !i.alt).length;
+  a.btnNoName = [...D.querySelectorAll('button')].filter((b) => !(b.textContent.trim() || b.getAttribute('aria-label'))).length;
+  const ids = [...D.querySelectorAll('[id]')].map((e) => e.id);
+  a.dupIds = ids.filter((id, i) => ids.indexOf(id) !== i);
+  a.hiddenSlidesAria = [...D.querySelectorAll('.slide:not(.active)')].every((s) => s.getAttribute('aria-hidden') === 'true');
+  a.live = !!D.querySelector('#announcer[aria-live]');
+  a.tablists = [...D.querySelectorAll('[role="tablist"]')].length;
+  a.selectsLabeled = [...D.querySelectorAll('select')].every((s) => s.getAttribute('aria-label') || s.closest('label'));
+  await go(2); $('ctl-track').querySelector('.ctl-stop.active').focus();
+  a.focusRing = W.getComputedStyle(D.activeElement).outlineStyle !== 'none' || W.getComputedStyle(D.activeElement, '::before').boxShadow !== 'none';
+  check('U7', 'נגישות: H1 יחיד, alt לתמונות, שמות לכפתורים, id ייחודיים, aria-hidden, aria-live', a.h1 === 1 && !a.imgNoAlt && !a.btnNoName && !a.dupIds.length && a.hiddenSlidesAria && a.live && a.selectsLabeled, JSON.stringify(a));
+
+  // תנועה מופחתת – סימולציה (אין אפשרות להפעיל את הגדרת המערכת מתוך הדפדפן הזה)
+  await load(1280, 720);
+  W.GN.reduceMotion = true;
+  // שולפים את הכללים האמיתיים מתוך @media (prefers-reduced-motion) של המצגת ומפעילים אותם ללא תנאי
+  const rules = [];
+  [...D.styleSheets].forEach((sh) => { try { [...sh.cssRules].forEach((r) => { if (r.media && /prefers-reduced-motion/.test(r.conditionText || r.media.mediaText)) rules.push(...[...r.cssRules].map((x) => x.cssText)); }); } catch (e) { /* גיליון חיצוני (גופנים) */ } });
+  const st = D.createElement('style');
+  st.textContent = rules.join('\n');
+  D.head.appendChild(st);
+  W.GN.nav.goTo(3); await sleep(250);
+  const visible = [...W.GN.nav.current().querySelectorAll('[data-anim]')].every((el) => W.getComputedStyle(el).opacity === '1');
+  const numNow = D.querySelector('.slide.active [data-count="16"]').textContent;
+  check('U8', 'תנועה מופחתת (סימולציה): התוכן מוצג מיד, מספרים בערך הסופי, בלי מעבר Replay', visible && numNow === '16' && !$('stinger').classList.contains('run'), `תוכן גלוי אחרי 250ms: ${visible} · מספר: ${numNow} · ${rules.length} כללים · ⚠ סימולציה: כללי @media (prefers-reduced-motion) של המצגת הופעלו ללא תנאי, וסומן GN.reduceMotion`);
+}
+
+// ---------------------------------------------------------------- תוכן
+async function content() {
+  await load(1280, 720);
+  // textContent ולא innerText: innerText מתעלם משקופיות מוסתרות (visibility: hidden)
+  const text = D.body.textContent.replace(/\u2066|\u2069/g, '');
+  const S = Object.fromEntries(DATA.SEASONS.map((s) => [s.season, s]));
+  // ערכים שכתובים ידנית ב־HTML צריכים להתאים ל־SEASONS
+  const expect = [
+    ['שקופית 6: 14.7 נק׳ ב־2023–24', S['2023-24'].pts === 14.7 && /14\.7 נק׳/.test(text)],
+    ['שקופית 6: 50.6% מהשדה', S['2023-24'].fg === 50.6 && /50\.6%/.test(text)],
+    ['שקופית 10: 6.3 → 24.2 PTS', S['2020-21'].pts === 6.3 && S['2025-26'].pts === 24.2 && /6\.3 → 24\.2/.test(text)],
+    ['שקופית 10: 1.2 → 6.7 AST', S['2020-21'].ast === 1.2 && S['2025-26'].ast === 6.7 && /1\.2 → 6\.7/.test(text)],
+    ['שקופית 10: ריבאונד 6.9–7.3 בשלוש העונות האחרונות', Math.min(...['2023-24', '2024-25', '2025-26'].map((k) => S[k].reb)) === 6.9 && Math.max(...['2023-24', '2024-25', '2025-26'].map((k) => S[k].reb)) === 7.3],
+    ['שקופית 10: 3P% 37.4 → 31.8', S['2023-24'].tp === 37.4 && S['2025-26'].tp === 31.8],
+    ['שקופית 8: 425 משחקים = סכום SEASONS', DATA.SEASONS.reduce((s, x) => s + x.games, 0) === 425],
+    ['חידון: 24.2 = ממוצע 2025–26', DATA.QUIZ.some((q) => q.options[q.answer] === '24.2') && S['2025-26'].pts === 24.2],
+    ['טיקר: 24.2/6.9/6.7 = 2025–26', DATA.TICKER_ITEMS.some((t) => t.includes('24.2 נק׳, 6.9 ריב׳, 6.7 אס׳')) && S['2025-26'].reb === 6.9],
+  ];
+  const badE = expect.filter((e) => !e[1]).map((e) => e[0]);
+  check('C1', 'עקביות: מספרים שכתובים בטקסט תואמים לטבלת הנתונים', !badE.length, badE.length ? badE.join(' · ') : `${expect.length} השוואות תקינות`);
+
+  // אותה עובדה בכמה שקופיות – אותו ערך
+  const facts = [
+    ['MVP U20: 18.4/8.3/5.3', (text.match(/18\.4 נק׳, 8\.3 ריב׳ ו־5\.3/g) || []).length + DATA.TIMELINE.filter((t) => t.events.join().includes('18.4 נק׳, 8.3 ריב׳, 5.3')).length >= 2, /18\.4 נק׳, 8\.[0-24-9]/.test(text)],
+    ['יורובאסקט 2025: 24.0', true, /יורובאסקט[^.]{0,20}2[0-35-9]\.\d נק׳/.test(text)],
+    ['בכורה: 16 שנים ו־320 ימים', true, /16 שנים, 3[0-13-9]\d/.test(text)],
+    ['הפלייאוף: 22.3', true, /22\.[0-24-9] נק׳ למשחק, הפסד/.test(text)],
+    ['שיא קריירה 43', true, /שיא קריירה:? 4[0-24-9] נק/.test(text)],
+  ];
+  const conflicts = facts.filter((f) => !f[1] || f[2]).map((f) => f[0]);
+  check('C2', 'אין סתירות: עובדות שחוזרות בכמה שקופיות מופיעות באותו ערך', !conflicts.length, conflicts.length ? conflicts.join(' · ') : `${facts.length} עובדות חוזרות נבדקו`);
+
+  // כל התמונות נטענות
+  const srcs = [...new Set([...[...D.images].map((i) => i.src), ...Object.values(DATA.PHOTOS).map((p) => p.src)])];
+  const loads = await Promise.all(srcs.map((src) => new Promise((r) => { const im = new Image(); im.onload = () => r([src, im.naturalWidth]); im.onerror = () => r([src, 0]); im.src = src; })));
+  const broken = loads.filter((l) => !l[1]);
+  check('C3', 'כל התמונות נטענות (תמונות המסמך + תמונות ציר הזמן)', !broken.length, `${loads.length} תמונות: ${loads.map((l) => `${decodeURIComponent(l[0].split('/').pop()).slice(6, 30)} (${l[1]}px)`).join(', ')}`);
+
+  // קרדיט לכל תמונה
+  const credited = Object.values(DATA.PHOTOS).every((p) => p.credit && p.page.includes('commons.wikimedia.org'));
+  const listed = [...D.querySelectorAll('.sources .credits a')].map((a) => a.href);
+  const usedPages = [...new Set([...[...D.querySelectorAll('.slide .photo .credit')].map((a) => a.href), ...Object.values(DATA.PHOTOS).map((p) => p.page)])];
+  const missing = usedPages.filter((p) => !listed.includes(p));
+  check('C4', 'לכל תמונה יש קרדיט ורישיון, וכולן מופיעות ברשימת המקורות', credited && !missing.length, missing.length ? `חסרות ברשימת הקרדיטים: ${missing.map((m) => decodeURIComponent(m.split('File:')[1])).join(', ')}` : `${usedPages.length} תמונות עם קרדיט`);
+
+  // סימוני ⚠
+  const warn = (text.match(/⚠/g) || []).length;
+  report('C5', 'פריטים שמסומנים "דורש אימות" (⚠) במצגת', 'info', `${warn} סימונים גלויים במצגת (כולל המקרא)`);
+}
+
+// ---------------------------------------------------------------- הרצה
+document.getElementById('run').addEventListener('click', async () => {
+  document.getElementById('out').innerHTML = ''; results.length = 0; errors.length = 0;
+  const t0 = performance.now();
+  const sum = document.getElementById('summary');
+  sum.textContent = 'רץ...';
+  try { await functional(); } catch (e) { report('F!', 'חריגה בבדיקות הפונקציונליות', 'fail', e.stack); }
+  try { await ux(); } catch (e) { report('U!', 'חריגה בבדיקות UX', 'fail', e.stack); }
+  try { await content(); } catch (e) { report('C!', 'חריגה בבדיקות התוכן', 'fail', e.stack); }
+  check('F10', 'אין שגיאות JavaScript (error, unhandledrejection, console.error) בכל ההרצה', !errors.length, errors.length ? errors.slice(0, 8).join(' · ') : 'אפס שגיאות בכל הגדלים והבדיקות');
+  const p = results.filter((r) => r.status === 'pass').length;
+  const f = results.filter((r) => r.status === 'fail').length;
+  sum.textContent = `${p} עברו · ${f} נכשלו · ${results.length - p - f} מידע · ${Math.round((performance.now() - t0) / 1000)} שניות`;
+  window.QA_DONE = true;
+});
+</script>
+</body>
+</html>

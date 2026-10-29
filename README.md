@@ -46,8 +46,11 @@ js/
   components/quiz.js        חידון עם משוב, ניקוד ומסך סיכום
   app.js                    נקודת הכניסה
 assets/img/                 תמונות (בשלב הבא, אחרי אישור)
+tests/
+  qa.html                   סוללת בדיקות אוטומטית (25 בדיקות) – http://127.0.0.1:5173/tests/qa.html
 docs/
   PRD.md                    מסמך הדרישות
+  TEST_REPORT.md            דו"ח הבדיקות
   DECISION_LOG.md           יומן החלטות ותהליך
   archive/                  קבצי אב־הטיפוס v1, לתיעוד ההשוואה בין הגרסאות
 ```

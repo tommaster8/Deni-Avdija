@@ -72,7 +72,7 @@ GN.clock = (() => {
     $('night-us').textContent = m ? m.usTime : fmtUS.format(now);
     $('night-il').textContent = m ? m.ilTime : fmtIL.format(now);
     $('night-line').textContent = m ? m.line
-      : 'משחקי הבית של פורטלנד מתחילים בדרך כלל ב־19:00 שעון החוף המערבי – בסביבות חמש לפנות בוקר בישראל.';
+      : 'משחק שמתחיל ב־19:00 שעון החוף המערבי מתחיל בישראל בסביבות חמש לפנות בוקר.';
     lastFocus = document.activeElement;
     $('night').hidden = false;
     GN.overlayOpen = true;

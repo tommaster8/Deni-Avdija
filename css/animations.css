@@ -41,4 +41,7 @@
     transition-duration: .01ms !important;
   }
   .ticker-track { animation: none; }
+  /* תוכן השקופית מוצג מיד, בלי השהיית הכניסה המדורגת */
+  [data-anim], .slide.active [data-anim] { opacity: 1; transform: none; animation: none; }
+  .intro-8 { opacity: 1; transform: none; }
 }

@@ -75,7 +75,8 @@ GN.timeline = (() => {
 
     // מקלדת בתוך הציר: ב־RTL חץ שמאלה = התחנה הבאה. העצירה מונעת מעבר שקופית.
     track.addEventListener('keydown', (e) => {
-      const keys = { ArrowLeft: index + 1, ArrowRight: index - 1, Home: 0, End: TIMELINE.length - 1 };
+      const from = tabs.includes(document.activeElement) ? tabs.indexOf(document.activeElement) : index;
+      const keys = { ArrowLeft: from + 1, ArrowRight: from - 1, Home: 0, End: TIMELINE.length - 1 };
       if (!(e.key in keys)) return;
       e.preventDefault();
       e.stopPropagation();

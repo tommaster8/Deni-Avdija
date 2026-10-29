@@ -48,7 +48,7 @@
 }
 
 /* מסכים נמוכים (מקרן 1280×720 עם סרגלי דפדפן) */
-@media (max-height: 760px) and (min-width: 961px) {
+@media (max-height: 800px) and (min-width: 961px) {
   .slide { padding: 18px 16px; }
   h2 { font-size: clamp(30px, 4vw, 46px); margin-bottom: 10px; }
   .lead { margin-bottom: 12px; font-size: 17px; }
@@ -77,7 +77,7 @@
   .photo-wide img { height: 150px; }
   .career-line b { font-size: 32px; }
 }
-@media (max-height: 760px) and (min-width: 961px) {
+@media (max-height: 800px) and (min-width: 961px) {
   .photo-wide img { height: 120px; }
   .draft-facts b { font-size: 32px; }
   .draft-facts { margin-bottom: 14px; }
@@ -88,7 +88,7 @@
 }
 
 /* רכיבים אינטראקטיביים במסך נמוך (מקרן) */
-@media (max-height: 760px) and (min-width: 961px) {
+@media (max-height: 800px) and (min-width: 961px) {
   .bar-chart { height: 190px; }
   .bar-metric { margin-bottom: 2px; }
   .career-line { margin-top: 6px; }
