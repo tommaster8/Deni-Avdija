@@ -32,7 +32,11 @@ GN.ui = (() => {
   }
 
   function initFlipCards() {
-    GN.$$('.flip-card').forEach((card) => card.addEventListener('click', () => card.classList.toggle('flipped')));
+    GN.$$('.flip-card').forEach((card) => card.addEventListener('click', (e) => {
+      // גרירה לסיבוב הדמות התלת־ממדית אינה לחיצה, ולכן אינה הופכת את הכרטיס
+      if (e.target.closest('.card-3d') && GN.player3d?.wasDragged()) return;
+      card.classList.toggle('flipped');
+    }, true));
   }
 
   // מספרים רצים: data-count="24.2" (מספר הספרות אחרי הנקודה נקבע מהערך)

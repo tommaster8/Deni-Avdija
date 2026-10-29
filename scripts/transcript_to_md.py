@@ -34,6 +34,7 @@ def main(src, dst):
     out = []
     turn = 0
     tools = Counter()
+    awaiting_reply = False  # תמונה שצורפה להודעה נרשמת ביומן כהודעה נפרדת, ומאוחדת כאן לאותו תור
 
     def flush_tools():
         if tools:
@@ -60,12 +61,19 @@ def main(src, dst):
             texts = [t for t in texts if t.strip() and not t.startswith('<system-reminder>')]
             if not texts:
                 continue
+            joined = '\n'.join(texts)
+            if awaiting_reply and joined.lstrip().startswith('[Image'):  # תמונה שצורפה לאותה הודעה
+                out.append(clean_user(joined) + '\n')
+                continue
             flush_tools()
             turn += 1
+            awaiting_reply = True
             out.append(f'\n---\n\n## תור {turn} · 👤 משתמש · {ts(r["timestamp"])}\n')
             out.append(clean_user('\n'.join(texts)) + '\n')
         elif kind == 'assistant' and isinstance(content, list):
             for p in content:
+                if p.get('type') in ('text', 'tool_use'):
+                    awaiting_reply = False
                 if p.get('type') == 'text' and p.get('text', '').strip():
                     out.append(f'\n**🤖 Claude** · {ts(r["timestamp"])}\n\n{p["text"].strip()}\n')
                 elif p.get('type') == 'tool_use':

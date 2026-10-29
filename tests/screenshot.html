@@ -14,6 +14,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const SHOTS = {
   opening:  { hash: '#1' },
   card:     { hash: '#2', run: (D) => D.querySelector('.flip-card').click() },
+  player3d: { hash: '#2', final: (D, W) => W.GN.player3d.freeze(-0.35) }, // הצד הקדמי, הדמות נעצרת כשהיא פונה קדימה
   timeline: { hash: '#3', run: (D) => D.querySelectorAll('.ctl-stop')[6].click() },
   chart:    { hash: '#8', run: async (D, W) => { D.querySelector('[data-bar="reb"]').click(); await sleep(1500); D.querySelectorAll('.bar')[3].dispatchEvent(new W.MouseEvent('mouseenter')); } },
   compare:  { hash: '#9', run: (D, W) => { const a = D.getElementById('cmp-a'); a.value = '2020-21'; a.dispatchEvent(new W.Event('change')); } },
@@ -32,6 +33,7 @@ const SHOTS = {
   await sleep(2500); // אנימציות הכניסה מסתיימות
   if (shot.run) await shot.run(f.contentDocument, f.contentWindow);
   await sleep(3500);
+  if (shot.final) { await shot.final(f.contentDocument, f.contentWindow); await sleep(300); }
   document.title = 'ready';
 })();
 </script>

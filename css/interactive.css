@@ -238,3 +238,12 @@
 /* ---------- ניגודיות: אדום לטקסט קטן (WCAG AA ≥ 4.5 גם על כרטיס) ---------- */
 :root { --red-text: #ec5357; } /* 5.47 על הרקע, 4.87 על כרטיס. האדום המקורי: 4.46 ו־3.97 */
 .kicker, .scout-tag, .ctl-tag, .nav-label b, .tl-item.active, .delta-row .down { color: var(--red-text); }
+
+/* ---------- 2. דמות תלת־ממדית בכרטיס השחקן ---------- */
+.card-3d { position: relative; width: 100%; }
+.card-3d canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; cursor: grab; touch-action: pan-y; opacity: 0; transition: opacity .6s var(--ease); }
+.card-3d canvas:active { cursor: grabbing; }
+.card-3d.ready canvas { opacity: 1; }
+.card-3d.ready svg { opacity: 0; transition: opacity .4s; } /* הצללית נשארת רק אם Three.js לא נטען */
+.card-3d-hint { display: none; font-size: 12px; color: var(--muted); margin-top: 4px; }
+.flip-face.front:has(.card-3d.ready) .card-3d-hint { display: block; } /* רק כשהדמות נטענה */

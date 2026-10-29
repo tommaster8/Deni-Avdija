@@ -216,6 +216,7 @@
 | שפות | HTML5, CSS3, JavaScript (ES2020) | דרישת המטלה |
 | Framework | אין (Vanilla) | אין צורך בבנייה (Build), והקבצים נפתחים ישירות |
 | גרפים | SVG ו־DOM שנכתבים ידנית | אין תלות ברשת, ויש שליטה מלאה בעיצוב ובאנימציה |
+| תלת־ממד (נוסף אחרי ההגשה) | Three.js r128 (CDN), רק לדמות בכרטיס השחקן | נטען בעצלות, ויש גיבוי SVG בלי רשת |
 | גופנים | Google Fonts (Heebo, Bebas Neue) עם גופני גיבוי | עברית איכותית. אם אין רשת, יש גיבוי |
 | תמונות | WebP או JPG, עד 200KB לתמונה, עם `loading="lazy"` | עמידה ביעד המשקל (NFR-01) |
 | שרת פיתוח | `python3 -m http.server` | פשוט, בלי התקנות |
@@ -228,8 +229,8 @@
 ```
 index.html
 css/   base · layout · components · interactive · night · animations · responsive
-js/    data.js · app.js · core/(utils, navigation, clock) · components/(interactions, timeline, charts, compare, quiz)
-tests/ qa.html · screenshot.html · capture-screenshots.mjs
+js/    data.js · app.js · core/(utils, navigation, clock) · components/(interactions, timeline, player3d, charts, compare, quiz)
+tests/ qa.html · run-qa.mjs · screenshot.html · capture-screenshots.mjs
 scripts/ transcript_to_md.py
 docs/  PRD · TEST_REPORT · AI_CONVERSATION_LOG · DECISION_LOG · screenshots/ · archive/
 ```

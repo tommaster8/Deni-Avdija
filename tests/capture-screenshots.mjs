@@ -11,7 +11,7 @@ const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const BASE = 'http://127.0.0.1:5173/tests/screenshot.html?shot=';
 const OUT = fileURLToPath(new URL('../docs/screenshots/', import.meta.url));
 const SHOTS = [
-  ['opening', 1280, 720], ['card', 1280, 720], ['timeline', 1280, 720], ['chart', 1280, 720],
+  ['opening', 1280, 720], ['player3d', 1280, 720], ['card', 1280, 720], ['timeline', 1280, 720], ['chart', 1280, 720],
   ['compare', 1280, 720], ['national', 1280, 720], ['night', 1280, 720], ['quiz', 1280, 720],
   ['timeline', 390, 844, 'mobile-timeline'],
 ];
